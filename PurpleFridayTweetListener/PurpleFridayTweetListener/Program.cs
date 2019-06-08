@@ -38,7 +38,7 @@ namespace PurpleFridayTweetListener
                 }
 
                 //the tweet must have media
-                if(targs.Tweet.Media == null || !targs.Tweet.Media.Any())
+                if (targs.Tweet.Media == null || !targs.Tweet.Media.Any())
                 {
                     return;
                 }
@@ -63,12 +63,6 @@ namespace PurpleFridayTweetListener
                     var centerPoint = _locationFinder.GetCentralGeoCoordinate(coordinateList);
                     Console.WriteLine($"{centerPoint.Latitude} - {centerPoint.Longitude}");
 
-                    var tweetForwarder = new TweetDataForwarder(new TweetDataConfiguration
-                    {
-                        BaseUrl = new Uri("https://localhost:44398"),
-                        TweetSendPath = "/api/map"
-                    });
-
                     var tweetData = new TweetData
                     {
                         CreatedDate = targs.Tweet.CreatedAt,
@@ -76,30 +70,41 @@ namespace PurpleFridayTweetListener
                         Text = targs.Tweet.Text,
                         TweetId = targs.Tweet.IdStr,
                         Coords = new double[] { centerPoint.Latitude, centerPoint.Longitude },
-                        TwitterHandle = targs.Tweet.CreatedBy.ScreenName
+                        TwitterHandle = targs.Tweet.CreatedBy.ScreenName,
+                        LocationConfidence = LocationConfidence.EXACT.ToString(),
+                        TweetUrl = targs.Tweet.Url
                     };
 
-                    try
-                    {
-                        await Task.Run(() => tweetForwarder.ForwardData(tweetData));
 
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine("Error forwarding data to client:");
-                        Console.WriteLine(JsonConvert.SerializeObject(tweetData));
-                    }
+                    await SendTweetData(tweetData);
                 }
                 else
                 {
                     //TODO: Lookup hashtags locations
-                    foreach(var hashtag in targs.Tweet.Hashtags)
+                    foreach (var hashtag in targs.Tweet.Hashtags)
                     {
-                        var coords = _locationFinder.GetLocationFromStringAsync(hashtag.Text);
+                        var locationResult = await _locationFinder.GetLocationFromStringAsync(hashtag.Text);
+                        if(locationResult == null)
+                        {
+                            continue;
+                        }
+
+                        var tweetData = new TweetData
+                        {
+                            CreatedDate = targs.Tweet.CreatedAt,
+                            Image = targs.Tweet.Media.First(x => x.MediaType != "video").MediaURLHttps,
+                            Text = targs.Tweet.Text,
+                            TweetId = targs.Tweet.IdStr,
+                            Coords = new double[] { locationResult.Coordinates.Latitude, locationResult.Coordinates.Longitude },
+                            TwitterHandle = targs.Tweet.CreatedBy.ScreenName,
+                            LocationConfidence = locationResult.Confidence.ToString(),
+                            TweetUrl = targs.Tweet.Url
+                        };
+
+                        await SendTweetData(tweetData);
+                        break;
                     }
                 }
-
-
             };
 
             stream.StreamStarted += (sender, streamArgs) =>
@@ -119,6 +124,26 @@ namespace PurpleFridayTweetListener
             Console.ReadKey();
 
             return null;
+        }
+
+        private static async Task SendTweetData(TweetData data)
+        {
+            var tweetForwarder = new TweetDataForwarder(new TweetDataConfiguration
+            {
+                BaseUrl = new Uri("https://localhost:44398"),
+                TweetSendPath = "/api/map"
+            });
+
+            try
+            {
+                await Task.Run(() => tweetForwarder.ForwardData(data));
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error forwarding data to client:");
+                Console.WriteLine(JsonConvert.SerializeObject(data));
+            }
         }
     }
 }

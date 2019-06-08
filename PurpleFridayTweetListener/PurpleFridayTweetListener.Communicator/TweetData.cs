@@ -22,5 +22,9 @@ namespace PurpleFridayTweetListener.Communicator
         public DateTime CreatedDate { get; set; }
 
         public string TweetId { get; set; }
+
+        public string TweetUrl { get; set; }
+
+        public string LocationConfidence { get; set; }
     }
 }

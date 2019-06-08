@@ -6,7 +6,7 @@ namespace PurpleFridayTweetListener.LocationFinder
 {
     public interface ILocationFinder
     {
-        Task<Coordinates> GetLocationFromStringAsync(string locationText);
+        Task<LocationFinderResult> GetLocationFromStringAsync(string locationText);
         Coordinates GetCentralGeoCoordinate(IList<Coordinates> geoCoordinates);
     }
 }
