@@ -160,7 +160,7 @@ ViewData["Title"] = "Home Page";
             } else {
                 popupString = "<p>No messages from this area yet!</p>";
             }
-            L.popup().setContent(popupString).setLatLng(e.latlng).openOn(map);
+            L.popup({"maxHeight":350}).setContent(popupString).setLatLng(e.latlng).openOn(map);
         }
 
 
