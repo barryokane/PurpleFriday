@@ -30,7 +30,14 @@ namespace Web.Admin.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            List<MapPoint> mapData = GetData();
+            List<MapPoint> mapData = GetData(dataFilePath);
+            return Json(mapData);
+        }
+        // GET: api/values
+        [HttpGet("test")]
+        public JsonResult Test()
+        {
+            List<MapPoint> mapData = GetData(dataFilePath);
             return Json(mapData);
         }
 
@@ -38,7 +45,7 @@ namespace Web.Admin.Controllers
         [HttpPost]
         public void Post([FromBody]MapPoint value)
         {
-            List<MapPoint> mapData = GetData();
+            List<MapPoint> mapData = GetData(host.ContentRootPath + @"/_data/MapData_Test.json");
             //todo: check for duplicates?
             mapData.Add(value);
 
@@ -58,9 +65,9 @@ namespace Web.Admin.Controllers
         {
         }
         
-        List<MapPoint> GetData()
+        List<MapPoint> GetData(string jsonFilePath)
         {
-            string json = System.IO.File.ReadAllText(dataFilePath);
+            string json = System.IO.File.ReadAllText(jsonFilePath);
             List<MapPoint> mapData = JsonConvert.DeserializeObject<List<MapPoint>>(json);
             return mapData;
         }
