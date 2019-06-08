@@ -4,14 +4,31 @@
 <h1>Moderate</h1>
 
 <style>
-    #imageStreamContainer .img img {
+    #imageStream img {
         width: 200px;
-        height: 200px
+        height: 200px;
+        margin: 6px;
     }
 </style>
 
-<div id="imageStreamContainer">
-    <div class="img">
-        <img src="https://pbs.twimg.com/media/D8e7vBgWsAI0uns.jpg" />
-    </div>
+<div id="imageStream">
 </div>
+
+
+
+@section Scripts {
+
+
+    <script>
+    $(function() {
+        UpdateImages();
+    });
+    function UpdateImages() {
+        $.get( "/api/map", function( data ) {
+            for (i=0; i<data.length; i++) {
+                $("#imageStream").prepend($('<img>',{id:'img_'+data[i].TweetId,src:data[i].img}));
+            }
+        });
+    }
+    </script>
+}
