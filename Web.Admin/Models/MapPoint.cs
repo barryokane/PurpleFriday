@@ -7,11 +7,13 @@ namespace Web.Admin.Models
     public class MapPoint
     {
         [JsonProperty]
-        public string Id { get; set; }
+        public string TweetId { get; set; }
         [JsonProperty("img")]
         public string Img { get; set; }
         [JsonProperty]
         public string Text { get; set; }
+        [JsonProperty]
+        public DateTime CreatedDate { get; set; }
         [JsonProperty]
         public string TwitterHandle { get; set; }
         [JsonProperty]
