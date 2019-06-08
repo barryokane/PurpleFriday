@@ -1,6 +1,7 @@
 ﻿using Geocoding;
 using Geocoding.Google;
 using Geocoding.Microsoft;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,28 +21,39 @@ namespace PurpleFridayTweetListener.LocationFinder
             _geoCoder = new BingMapsGeocoder("Avmx12pASs7Py8SGg_nPgxHPF0eeUY3DzR7LKsPP9Su6toxQhnUudgJ5p-rOebFm");
         }
 
-        public async Task<Coordinates> GetLocationFromStringAsync(string locationText)
+        public async Task<LocationFinderResult> GetLocationFromStringAsync(string locationText)
         {
             try
             {
-                IEnumerable<Address> addresses = await _geoCoder.GeocodeAsync(locationText);
+                IEnumerable<BingAddress> addresses = await _geoCoder.GeocodeAsync(locationText) as IEnumerable<BingAddress>;
 
                 if(addresses == null || !addresses.Any())
                 {
                     return null;
                 }
 
-                Console.WriteLine("Formatted: " + addresses.First().FormattedAddress);
-                Console.WriteLine("Coordinates: " + addresses.First().Coordinates.Latitude + ", " + addresses.First().Coordinates.Longitude); 
-                var coords = addresses.First().Coordinates;
-                return new Coordinates
+                var matchedLocation = addresses.Where(x => x.Type == EntityType.PopulatedPlace && x.Confidence <= ConfidenceLevel.Medium).FirstOrDefault();
+                if(matchedLocation == null)
                 {
-                    Latitude = coords.Latitude,
-                    Longitude = coords.Longitude
+                    return null;
+                }
+
+                Console.WriteLine("Formatted: " + addresses.First().FormattedAddress);
+                Console.WriteLine("Coordinates: " + addresses.First().Coordinates.Latitude + ", " + addresses.First().Coordinates.Longitude);
+                return new LocationFinderResult
+                {
+                    Coordinates = new Coordinates
+                    {
+                        Latitude = matchedLocation.Coordinates.Latitude,
+                        Longitude = matchedLocation.Coordinates.Longitude
+                    },
+                    Confidence = matchedLocation.Confidence == ConfidenceLevel.High ? LocationConfidence.HIGH : LocationConfidence.MEDIUM
                 };
             }
             catch (Exception e)
             {
+                Console.WriteLine($"Exception caught in GetLocationFromStringAsync method, message: {e.Message}");
+                Console.WriteLine(JsonConvert.SerializeObject(e));
                 return null;
             }
 
