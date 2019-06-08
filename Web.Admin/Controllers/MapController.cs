@@ -33,7 +33,13 @@ namespace Web.Admin.Controllers
             List<MapPoint> mapData = GetData(dataFilePath);
             return Json(mapData);
         }
-        // GET: api/values
+        [HttpGet("{id}")]
+        public JsonResult Get(string id)
+        {
+            List<MapPoint> mapData = GetData(dataFilePath);
+            MapPoint point = mapData.FirstOrDefault(x=>x.TweetId==id);
+            return Json(point);
+        }
         [HttpGet("test")]
         public JsonResult Test()
         {
