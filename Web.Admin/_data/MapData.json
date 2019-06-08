@@ -1,1 +1,42 @@
-[{"img":"https://pbs.twimg.com/media/D8e7vBgWsAI0uns.jpg","Text":"Hard at work tonight on our #Impact48 mini hackathon.","TwitterHandle":"LGBTYS","Geo":[55.8,-3.2]},{"img":"https://pbs.twimg.com/media/D8e7vBgWsAI0uns.jpg","Text":"Text 2","TwitterHandle":"LGBTYS","Geo":[57.8,-5.2]},{"img":"https://pbs.twimg.com/media/D8e7vBgWsAI0uns.jpg","Text":"Text 3","TwitterHandle":"LGBTYS","Geo":[56.8,-4.2]},{"img":"https://pbs.twimg.com/media/D8e7vBgWsAI0uns.jpg","Text":"Text TEST","TwitterHandle":"LGBTYS","Geo":[57.83,-5.3]},{"img":"https://t.co/p9fEn2heyV","Text":"#صلاح_الدین_ایوبی_نےکہاتھا \nجو مزا نہانے میں وہ پینے میں نہ کھانے میں.\n#WorldOceansDay \n#Gujranwala #ENGvBAN… https://t.co/arqAUbVdrc","TwitterHandle":"WaseemAzmet","Geo":[32.164048419310838,74.173584]},{"img":"https://pbs.twimg.com/media/D8jJ9C4XkAA8521.jpg","Text":"Puma Court, London\n#London #Londonislovinit #cat #feline #Spitalfields #Caturday https://t.co/HJ21xoRZi1","TwitterHandle":"camlette","Geo":[51.490020924854,-0.088160999999999962]},{"img":"https://pbs.twimg.com/media/D8jN74xXkAAIVoM.jpg","Text":"TAMSRO Launches Deep Space Mission https://t.co/FHub0VbY4s | #london #honolulu #bitshares #Russia #Russia #sandeigo… https://t.co/fm9XWwUYkT","TwitterHandle":"theautomatski","Geo":[51.506420135498047,-0.12721000611782074]},{"img":"https://pbs.twimg.com/media/D8jN74xXkAAIVoM.jpg","Text":"TAMSRO Launches Deep Space Mission https://t.co/FHub0VbY4s | #london #honolulu #bitshares #Russia #Russia #sandeigo… https://t.co/fm9XWwUYkT","TwitterHandle":"theautomatski","Geo":[21.304929733276367,-157.85787963867188]},{"img":"https://pbs.twimg.com/media/D8jOKUlXUAAFnjx.jpg","Text":"Completely out my comfort zone...#london #outwithfriends 🥰xx https://t.co/8w3ECcOGrw","TwitterHandle":"louisexxewersxx","Geo":[51.506420135498047,-0.12721000611782074]},{"img":"https://pbs.twimg.com/media/D8jOKUlXUAAFnjx.jpg","Text":"Completely out my comfort zone...#london #outwithfriends 🥰xx https://t.co/8w3ECcOGrw","TwitterHandle":"louisexxewersxx","Geo":[52.233299255371094,31.38330078125]},{"img":"https://pbs.twimg.com/media/D8jThwbXkAIToi4.jpg","Text":"Have you made plans for #FathersDay yet? Call us now to reserve your table and treat your dad to a #Feast you know… https://t.co/PbRKDTGdWS","TwitterHandle":"cafe_route","Geo":[51.490020924854,-0.088160999999999962]},{"img":"https://pbs.twimg.com/media/D8jTk5HVsAYStqe.jpg","Text":"[Richard Morgan] The Story Behind the Baby Trump Balloon #Balloon #Wakefield #London #DonaldTrump… https://t.co/FwIReBKS38","TwitterHandle":"WhatstrumpuptoW","Geo":[42.506439208984375,-71.072433471679688]},{"img":"https://pbs.twimg.com/media/D8jTlKeXYAUHmTC.jpg","Text":"Defining The Next 1000 Years Of Human Evolution https://t.co/lqGie2AkCZ | #techcrunch #losangels #indianapolis… https://t.co/PMAwY6TQpU","TwitterHandle":"theautomatski","Geo":[39.766910552978516,-86.14996337890625]},{"img":"https://pbs.twimg.com/media/D8jUIk1WwAEnjYQ.jpg","Text":"Denmark Street, London\n.•\n #London #travel #streetphotography #photojournalism #documentary #photography… https://t.co/hLYDIH9tBg","TwitterHandle":"camlette","Geo":[51.500098452593647,-0.148936]}]
+[
+  {
+    "TweetId": "e717-9a01",
+    "img": "https://pbs.twimg.com/media/D8e7vBgWsAI0uns.jpg",
+    "Text": "Text TEST",
+    "CreatedDate": "2019-06-08T15:06:29+01:00",
+    "TwitterHandle": "LGBTYS",
+    "TweetUrl": "https://twitter.com/LGBTYS/status/1135926878202748930",
+    "LocationConfidence": "High",
+    "Geo": [ 55.8, -3.2 ]
+  },
+  {
+    "TweetId": "746f-e857",
+    "img": "https://pbs.twimg.com/media/D8e7vBgWsAI0uns.jpg",
+    "Text": "Text TEST",
+    "CreatedDate": "2019-06-08T16:06:29+01:00",
+    "TwitterHandle": "LGBTYS",
+    "TweetUrl": "https://twitter.com/LGBTYS/status/1135926878202748930",
+    "LocationConfidence": "High",
+    "Geo": [ 57.8, -5.2 ]
+  },
+  {
+    "TweetId": "2b4d-a931",
+    "img": "https://pbs.twimg.com/media/D8e7vBgWsAI0uns.jpg",
+    "Text": "Text TEST",
+    "CreatedDate": "2019-06-08T17:06:29+01:00",
+    "TwitterHandle": "LGBTYS",
+    "TweetUrl": "https://twitter.com/LGBTYS/status/1135926878202748930",
+    "LocationConfidence": "High",
+    "Geo": [ 56.8, -4.2 ]
+  },
+  {
+    "TweetId": "3f6e-d3ce",
+    "img": "https://pbs.twimg.com/media/D8e7vBgWsAI0uns.jpg",
+    "Text": "Text TEST",
+    "CreatedDate": "2019-06-08T18:06:29+01:00",
+    "TwitterHandle": "LGBTYS",
+    "TweetUrl": "https://twitter.com/LGBTYS/status/1135926878202748930",
+    "LocationConfidence": "High",
+    "Geo": [ 57.83, -5.3 ]
+  }
+]

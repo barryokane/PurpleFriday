@@ -26,7 +26,7 @@
     function UpdateImages() {
         $.get( "/api/map", function( data ) {
             for (i=0; i<data.length; i++) {
-                $("#imageStream").prepend($('<img>',{id:'img_'+data[i].TweetId,src:data[i].img}));
+                $("#imageStream").prepend($('<img>',{id:'img_'+data[i].tweetId,src:data[i].img}));
             }
         });
     }
