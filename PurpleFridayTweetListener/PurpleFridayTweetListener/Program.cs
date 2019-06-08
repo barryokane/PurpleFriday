@@ -12,7 +12,7 @@ namespace PurpleFridayTweetListener
 {
     class Program
     {
-        private static string STREAM_FILTERS = "#london";
+        private static string STREAM_FILTERS = "#impact48";
         private static ILocationFinder _locationFinder = new LocationFinder.LocationFinder();
 
         static void Main(string[] args)
@@ -130,7 +130,7 @@ namespace PurpleFridayTweetListener
         {
             var tweetForwarder = new TweetDataForwarder(new TweetDataConfiguration
             {
-                BaseUrl = new Uri("https://localhost:44398"),
+                BaseUrl = new Uri("https://localhost:5001/"),
                 TweetSendPath = "/api/map"
             });
 
