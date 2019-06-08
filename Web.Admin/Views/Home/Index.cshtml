@@ -5,45 +5,150 @@
 <h1>Test Map</h1>
 
 <div id="map" style="width: 600px; height: 400px;"></div>
-<script>function getXmlHttpObject() {
-        if (window.XMLHttpRequest) { return new XMLHttpRequest(); }
-        if (window.ActiveXObject) { return new ActiveXObject("Microsoft.XMLHTTP"); }
-        return null;
-    }
+<script>
 
-    // set up AJAX request
-    ajaxRequest = getXmlHttpObject();
-    if (ajaxRequest == null) {
-        alert("This browser does not support HTTP Request");
-    } else {
+	function inside(point, polygon) {
+	    // stolen from: https://github.com/substack/point-in-polygon and https://stackoverflow.com/questions/22521982/check-if-point-inside-a-polygon
+	    // ray-casting algorithm based on
+	    // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
 
-        // set up the map
-        map = new L.Map('map');
+	    // Had to flip these because of the way we get the data
+	    var x = point[1], y = point[0];
 
-        // create the tile layer with correct attribution
-        var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-        var osmAttrib = 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
-        var osm = new L.TileLayer(osmUrl, { minZoom: 5, maxZoom: 10, attribution: osmAttrib });
+	    var inside = false;
+	    for (var i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+		var xi = polygon[i][0], yi = polygon[i][1];
+		var xj = polygon[j][0], yj = polygon[j][1];
 
-        // start the map in South-East England
-        map.setView(new L.LatLng(56.8, -4.2), 6);
-        map.addLayer(osm);
+		var intersect = ((yi > y) != (yj > y))
+		    && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+		if (intersect) inside = !inside;
+	    }
 
-        function stateChanged() {
-            console.log(ajaxRequest.readyState);
-            console.log(ajaxRequest.status);
-            if (ajaxRequest.readyState == 4
-                && ajaxRequest.status == 200) {
-                var interactions = JSON.parse(ajaxRequest.responseText);
-                for (const interaction of interactions) {
-                    L.marker(interaction.geo).bindPopup("<img src=\"" + interaction.image + "\"/><p>" + interaction.text + "</p>").addTo(map);
-                }
-            }
+	    return inside;
+	};
+
+        function getXmlHttpObject() {
+                if (window.XMLHttpRequest) { return new XMLHttpRequest(); }
+                if (window.ActiveXObject)  { return new ActiveXObject("Microsoft.XMLHTTP"); }
+                return null;
         }
 
-        path = "api/map/";
-        ajaxRequest.onreadystatechange = stateChanged;
-        ajaxRequest.open('GET', path, true);
-        ajaxRequest.send(null);
+        // set up AJAX request
+        ajaxRequest = getXmlHttpObject();
+        if (ajaxRequest == null) {
+                alert("This browser does not support HTTP Request");
+        } else {
 
-    }</script>
+                // set up the map
+                map = new L.Map('map');
+
+                // create the tile layer with correct attribution
+                var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+                var osmAttrib='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
+                var osm = new L.TileLayer(osmUrl, {minZoom: 5, maxZoom: 10, attribution: osmAttrib});           
+
+                // start the map in South-East England
+                map.setView(new L.LatLng(56.8, -4.2),6);
+                map.addLayer(osm);
+
+		var interactions;
+                function stateChanged() {
+                        if (ajaxRequest.readyState == 4
+                            && ajaxRequest.status == 200) {
+                                interactions = JSON.parse(ajaxRequest.responseText);
+				for (const interaction of interactions) {
+					L.marker(interaction.geo).addTo(map);
+				}
+                        }
+                }
+
+		function fetchInteractions() {
+			path = "api/map/";
+			ajaxRequest.onreadystatechange = stateChanged;
+			ajaxRequest.open('GET', path, true);
+			ajaxRequest.send(null);
+		}
+
+		var geojson;
+
+		function highlightFeature(e) {
+		    var layer = e.target;
+
+		    layer.setStyle({
+			weight: 3,
+			color: '#B266FF',
+			fillOpacity: 0.7
+		    });
+
+		    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+			layer.bringToFront();
+		    }
+		}
+
+		function resetHighlight(e) {
+		    geojson.resetStyle(e.target);
+		}
+
+		function interactionsForLayer(layer) {
+			var geometry = layer.toGeoJSON().geometry;
+
+		    	if (geometry.type == "Polygon") {
+			    return interactions.filter(function (interaction) {
+				return inside(interaction.geo, geometry.coordinates[0]);
+			    });
+			} else {
+				for (const ploygon of geometry.coordinates) {
+					return interactions.filter(function (interaction) {
+						for (const polygon of geometry.coordinates) {
+							if (inside(interaction.geo, polygon[0]))
+								return true;
+						}
+						return false;
+					});
+				}
+			}
+		}
+
+		function showInteractions(e) {
+			var interactions = interactionsForLayer(e.target);
+			var popupString = "";
+			if (interactions) {
+				for (const interaction of interactions) {
+					popupString = popupString + "<div><img src=\"" + interaction.img + "\"/><b>" + interaction.twitterHandle + "</b></div>";
+				}
+				L.popup().setContent(popupString).setLatLng(e.latlng).openOn(map);
+			}
+		}
+
+
+		function onEachFeature(feature, layer) {
+		    layer.on({
+			mouseover: highlightFeature,
+			mouseout: resetHighlight,
+			click: showInteractions
+		    });
+		}
+
+		function handleConstituenciesRequest() {
+			if (ajaxRequest.readyState == 4
+			    && ajaxRequest.status == 200) {
+			    var contitiuencies = JSON.parse(ajaxRequest.responseText);
+			    geojson = L.geoJson(contitiuencies, {style: {color: '#4C0099',
+								         weight: 2,
+								         opacity: 1,
+								         fillColor: '#B266FF',
+								         fillOpacity: 0.3},
+								 onEachFeature: onEachFeature}).addTo(map);
+			    fetchInteractions();
+		    }
+		}
+
+		url = "https://statistics.gov.scot/geometry?resource=http://statistics.gov.scot/id/statistical-geography/S92000003&collection=http://statistics.gov.scot/def/foi/collection/constituencies&within=http://statistics.gov.scot/id/statistical-geography/S92000003";
+		ajaxRequest.onreadystatechange = handleConstituenciesRequest;
+		ajaxRequest.open('GET', url, true);
+		ajaxRequest.send(null);
+
+        }
+
+</script>
