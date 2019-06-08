@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Nito.AsyncEx;
 using PurpleFridayTweetListener.Communicator;
 using PurpleFridayTweetListener.LocationFinder;
 using System;
@@ -11,9 +12,15 @@ namespace PurpleFridayTweetListener
 {
     class Program
     {
-        private static string STREAM_FILTERS = "#TroopingTheColour";
+        private static string STREAM_FILTERS = "#london";
         private static ILocationFinder _locationFinder = new LocationFinder.LocationFinder();
-        static async Task Main(string[] args)
+
+        static void Main(string[] args)
+        {
+            AsyncContext.Run(() => MainAsync(args));
+        }
+
+        private static Task MainAsync(string[] args)
         {
             Auth.SetUserCredentials("cwDkQciFg4SMZ8xX4h5wGc4JL", "9XANRg9PkjqJtj3BI9B3UwQha2TfDgu2fdNPNAxm9cZ6TfDkuI", "975777483525165062-saRDxPN7t840ooILIHLRR5JLdjr8nXf", "jBcticse5V0r2oVrUutssIsLWWSRCgt5gdsok6xBvcApp");
 
@@ -30,7 +37,14 @@ namespace PurpleFridayTweetListener
                     return;
                 }
 
-                if(targs.Tweet.Media == null)
+                //the tweet must have media
+                if(targs.Tweet.Media == null || !targs.Tweet.Media.Any())
+                {
+                    return;
+                }
+
+                //the media must be photo or animated_gif (not video)
+                if (targs.Tweet.Media.All(x => x.MediaType == "video"))
                 {
                     return;
                 }
@@ -51,14 +65,14 @@ namespace PurpleFridayTweetListener
 
                     var tweetForwarder = new TweetDataForwarder(new TweetDataConfiguration
                     {
-                        BaseUrl = new Uri("https://127.0.0.1:5001"),
+                        BaseUrl = new Uri("https://localhost:44398"),
                         TweetSendPath = "/api/map"
                     });
 
                     var tweetData = new TweetData
                     {
                         CreatedDate = targs.Tweet.CreatedAt,
-                        Image = targs.Tweet.Media.First().URL,
+                        Image = targs.Tweet.Media.First(x => x.MediaType != "video").MediaURLHttps,
                         Text = targs.Tweet.Text,
                         TweetId = targs.Tweet.IdStr,
                         Coords = new double[] { centerPoint.Latitude, centerPoint.Longitude },
@@ -79,6 +93,10 @@ namespace PurpleFridayTweetListener
                 else
                 {
                     //TODO: Lookup hashtags locations
+                    foreach(var hashtag in targs.Tweet.Hashtags)
+                    {
+                        var coords = _locationFinder.GetLocationFromStringAsync(hashtag.Text);
+                    }
                 }
 
 
@@ -99,8 +117,8 @@ namespace PurpleFridayTweetListener
             stream.StartStreamMatchingAllConditions();
 
             Console.ReadKey();
-            return;
 
+            return null;
         }
     }
 }
