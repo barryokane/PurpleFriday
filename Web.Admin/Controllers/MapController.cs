@@ -19,25 +19,31 @@ namespace Web.Admin.Controllers
     public class MapController : Controller
     {
         private readonly IHostingEnvironment host;
+        private readonly string dataFilePath;
 
         public MapController(IHostingEnvironment host) {
             this.host = host;
+            dataFilePath = host.ContentRootPath + @"/_data/MapData.json";
         }
 
         // GET: api/values
         [HttpGet]
         public JsonResult Get()
         {
-            string json = System.IO.File.ReadAllText(host.ContentRootPath+@"/_data/MapData.json");
-            List< MapPoint> mapData = JsonConvert.DeserializeObject<List<MapPoint>>(json);
-
+            List<MapPoint> mapData = GetData();
             return Json(mapData);
         }
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        public void Post([FromBody]MapPoint value)
         {
+            List<MapPoint> mapData = GetData();
+            //todo: check for duplicates?
+            mapData.Add(value);
+
+            // serialize JSON to a string and then write string to a file
+            System.IO.File.WriteAllText(dataFilePath, JsonConvert.SerializeObject(mapData));
         }
 
         // PUT api/values/5
@@ -50,6 +56,13 @@ namespace Web.Admin.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+        }
+        
+        List<MapPoint> GetData()
+        {
+            string json = System.IO.File.ReadAllText(dataFilePath);
+            List<MapPoint> mapData = JsonConvert.DeserializeObject<List<MapPoint>>(json);
+            return mapData;
         }
     }
 }
