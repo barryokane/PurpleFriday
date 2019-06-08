@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Runtime.Serialization;
 using Web.Admin.Models;
+using Microsoft.AspNetCore.Hosting;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,24 +16,22 @@ namespace Web.Admin.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MapController : ControllerBase
+    public class MapController : Controller
     {
+        private readonly IHostingEnvironment host;
+
+        public MapController(IHostingEnvironment host) {
+            this.host = host;
+        }
 
         // GET: api/values
         [HttpGet]
-        public string Get()
+        public JsonResult Get()
         {
-            string json = System.IO.File.ReadAllText(@"/Users/barryokane/Documents/Impact48/PurpleFriday/Web.Admin/_data/MapData.json");
+            string json = System.IO.File.ReadAllText(host.ContentRootPath+@"/_data/MapData.json");
             List< MapPoint> mapData = JsonConvert.DeserializeObject<List<MapPoint>>(json);
 
-            return json;
-        }
-
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
+            return Json(mapData);
         }
 
         // POST api/values
