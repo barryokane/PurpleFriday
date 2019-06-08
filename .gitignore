@@ -351,6 +351,7 @@ MigrationBackup/
 
 ### Project specific ignores:
 
+.vscode/
 
 Web.Admin/bin/
 Web.Admin/obj/
