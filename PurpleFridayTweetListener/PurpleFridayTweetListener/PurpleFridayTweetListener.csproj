@@ -9,4 +9,9 @@
     <PackageReference Include="TweetinviAPI" Version="4.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PurpleFridayTweetListener.Communicator\PurpleFridayTweetListener.Communicator.csproj" />
+    <ProjectReference Include="..\PurpleFridayTweetListener.LocationFinder\PurpleFridayTweetListener.LocationFinder.csproj" />
+  </ItemGroup>
+
 </Project>
