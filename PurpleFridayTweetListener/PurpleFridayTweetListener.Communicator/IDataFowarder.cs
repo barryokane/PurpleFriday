@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace PurpleFridayTweetListener.Communicator
 {
-    public interface ITweetDataFowarder
+    public interface IDataFowarder
     {
-        Task ForwardData(TweetData data);
+        Task ForwardTweetData(TweetData data);
     }
 }

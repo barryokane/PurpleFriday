@@ -5,7 +5,7 @@ using NUnit.Framework;
 using PurpleFridayTweetListener.LocationFinder;
 using System.Threading.Tasks;
 
-namespace Tests
+namespace PurpleFridayTweetListener.LocationFinder
 {
     public class Tests
     {
