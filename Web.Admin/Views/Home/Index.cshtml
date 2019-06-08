@@ -7,6 +7,34 @@
 <div id="map" style="width: 600px; height: 400px;"></div>
 <script>
 
+	var lastYearsInteractions = [
+		{"name": "Highland",
+		 "interactions": 12},
+		{"name": "Na h-Eileanan Siar",
+		 "interactions": 6},
+		{"name": "Orkney Islands",
+		 "interactions" : 3},
+		{"name": "Aberdeenshire",
+		 "interactions": 4},
+		{"name": "Aberdeen City",
+		 "interactions": 12},
+		{"name": "Perth and Kinross",
+		 "interactions": 13},
+		{"name": "Stirling",
+		 "interactions": 4},
+		{"name": "Fife",
+		 "interactions": 15},
+		{"name": "Glasgow City",
+		 "interactions": 112},
+		{"name": "City of Edinburgh",
+		 "interactions": 118},
+		{"name": "Scottish Borders",
+		 "interactions": 26},
+	        {"name": "South Ayrshire",
+		 "interactions": 18},
+		{"name": "Dumfries and Galloway",
+		 "interactions": 17}];
+
 	function inside(point, polygon) {
 	    // stolen from: https://github.com/substack/point-in-polygon and https://stackoverflow.com/questions/22521982/check-if-point-inside-a-polygon
 	    // ray-casting algorithm based on
@@ -52,24 +80,6 @@
                 map.setView(new L.LatLng(56.8, -4.2),6);
                 map.addLayer(osm);
 
-		var interactions;
-                function stateChanged() {
-                        if (ajaxRequest.readyState == 4
-                            && ajaxRequest.status == 200) {
-                                interactions = JSON.parse(ajaxRequest.responseText);
-				for (const interaction of interactions) {
-					L.marker(interaction.geo).addTo(map);
-				}
-                        }
-                }
-
-		function fetchInteractions() {
-			path = "api/map/";
-			ajaxRequest.onreadystatechange = stateChanged;
-			ajaxRequest.open('GET', path, true);
-			ajaxRequest.send(null);
-		}
-
 		var geojson;
 
 		function highlightFeature(e) {
@@ -90,8 +100,8 @@
 		    geojson.resetStyle(e.target);
 		}
 
-		function interactionsForLayer(layer) {
-			var geometry = layer.toGeoJSON().geometry;
+		function interactionsForLayer(geoJSON) {
+			var geometry = geoJSON.geometry;
 
 		    	if (geometry.type == "Polygon") {
 			    return interactions.filter(function (interaction) {
@@ -111,7 +121,7 @@
 		}
 
 		function showInteractions(e) {
-			var interactions = interactionsForLayer(e.target);
+			var interactions = interactionsForLayer(e.target.toGeoJSON());
 			var popupString = "";
 			if (interactions.length > 0) {
 				for (const interaction of interactions) {
@@ -130,24 +140,69 @@
 		    });
 		}
 
+		var interactions;
+
+		function getOpacity(feature) {
+			var lastYearsInteractionsForFeature = lastYearsInteractions.find(function (el) { return el.name == feature.properties.name; });
+			if (!lastYearsInteractionsForFeature) {
+				var requiredInteractions = 1;
+			} else {
+				var requiredInteractions = lastYearsInteractionsForFeature.interactions;
+			}
+			var interactions = interactionsForLayer(feature);
+			if (interactions.length > (requiredInteractions * 1.5)) {
+			  return 0.9;
+			} else if (interactions.length > requiredInteractions) {
+			  return 0.5;
+			} else if (interactions.length > 0) {
+			  return 0.2;
+		        } else {
+			  return 0.01;
+			}
+		}
+
+		function style(feature) {
+			return {
+				color: '#4C0099',
+				weight: 2,
+				opacity: 1,
+				fillColor: '#B266FF',
+				fillOpacity: getOpacity(feature)
+			};
+		}
+
 		function handleCouncilAreasRequest() {
 			if (ajaxRequest.readyState == 4
 			    && ajaxRequest.status == 200) {
 			    var councilAreas = JSON.parse(ajaxRequest.responseText);
-			    geojson = L.geoJson(councilAreas, {style: {color: '#4C0099',
-								         weight: 2,
-								         opacity: 1,
-								         fillColor: '#B266FF',
-								         fillOpacity: 0.3},
-								 onEachFeature: onEachFeature}).addTo(map);
-			    fetchInteractions();
+			    councilAreas.features.shift();
+			    geojson = L.geoJson(councilAreas, {style: style, onEachFeature: onEachFeature}).addTo(map);
 		    }
 		}
 
-		url = "https://statistics.gov.scot/geometry?resource=http://statistics.gov.scot/id/statistical-geography/S92000003&collection=http://statistics.gov.scot/def/foi/collection/council-areas&within=http://statistics.gov.scot/id/statistical-geography/S92000003";
-		ajaxRequest.onreadystatechange = handleCouncilAreasRequest;
-		ajaxRequest.open('GET', url, true);
-		ajaxRequest.send(null);
+		function renderCouncilAreaData() {
+			url = "https://statistics.gov.scot/geometry?resource=http://statistics.gov.scot/id/statistical-geography/S92000003&collection=http://statistics.gov.scot/def/foi/collection/council-areas&within=http://statistics.gov.scot/id/statistical-geography/S92000003";
+			ajaxRequest.onreadystatechange = handleCouncilAreasRequest;
+			ajaxRequest.open('GET', url, true);
+			ajaxRequest.send(null);
+		}
+
+                function handleInteractionsResponse() {
+                        if (ajaxRequest.readyState == 4
+                            && ajaxRequest.status == 200) {
+                                interactions = JSON.parse(ajaxRequest.responseText);
+				renderCouncilAreaData();
+                        }
+                }
+
+		function fetchInteractions() {
+			path = "api/map/";
+			ajaxRequest.onreadystatechange = handleInteractionsResponse;
+			ajaxRequest.open('GET', path, true);
+			ajaxRequest.send(null);
+		}
+
+		fetchInteractions();
 
         }
 
