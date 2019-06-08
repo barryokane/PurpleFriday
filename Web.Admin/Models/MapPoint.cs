@@ -6,6 +6,18 @@ namespace Web.Admin.Models
     [JsonObject(MemberSerialization.OptIn)]
     public class MapPoint
     {
+        bool? _hide = false;
+        [JsonProperty]
+        public bool? Hide { 
+            get {
+                return _hide;
+            }  
+            set
+            {
+                _hide = (value.HasValue) ? value : false;
+            }
+        }
+
         [JsonProperty]
         public string TweetId { get; set; }
         [JsonProperty("img")]

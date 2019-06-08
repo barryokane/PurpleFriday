@@ -28,9 +28,9 @@ namespace Web.Admin.Controllers
 
         // GET: api/values
         [HttpGet]
-        public JsonResult Get()
+        public JsonResult Get(bool? getall)
         {
-            List<MapPoint> mapData = GetData(dataFilePath);
+            List<MapPoint> mapData = (getall.HasValue && getall.Value) ? GetData(dataFilePath) : GetDataNotHidden(dataFilePath);
             return Json(mapData);
         }
         [HttpGet("{id}")]
@@ -47,7 +47,7 @@ namespace Web.Admin.Controllers
         [HttpGet("test")]
         public JsonResult Test()
         {
-            List<MapPoint> mapData = GetData(host.ContentRootPath + @"/_data/MapData_Test.json");
+            List<MapPoint> mapData = GetDataNotHidden(host.ContentRootPath + @"/_data/MapData_Test.json");
             return Json(mapData);
         }
 
@@ -71,7 +71,15 @@ namespace Web.Admin.Controllers
         public void Delete(int id)
         {
         }*/
-        
+
+        List<MapPoint> GetDataNotHidden(string jsonFilePath)
+        {
+            List<MapPoint> mapData = GetData(jsonFilePath);
+            mapData = (from m in mapData
+                       where m.Hide.HasValue || !m.Hide.Value
+                       select m).ToList();
+            return mapData;
+        }
         List<MapPoint> GetData(string jsonFilePath)
         {
             string json = System.IO.File.ReadAllText(jsonFilePath);
