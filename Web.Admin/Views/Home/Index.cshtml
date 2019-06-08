@@ -130,11 +130,11 @@
 		    });
 		}
 
-		function handleConstituenciesRequest() {
+		function handleCouncilAreasRequest() {
 			if (ajaxRequest.readyState == 4
 			    && ajaxRequest.status == 200) {
-			    var contitiuencies = JSON.parse(ajaxRequest.responseText);
-			    geojson = L.geoJson(contitiuencies, {style: {color: '#4C0099',
+			    var councilAreas = JSON.parse(ajaxRequest.responseText);
+			    geojson = L.geoJson(councilAreas, {style: {color: '#4C0099',
 								         weight: 2,
 								         opacity: 1,
 								         fillColor: '#B266FF',
@@ -144,8 +144,8 @@
 		    }
 		}
 
-		url = "https://statistics.gov.scot/geometry?resource=http://statistics.gov.scot/id/statistical-geography/S92000003&collection=http://statistics.gov.scot/def/foi/collection/constituencies&within=http://statistics.gov.scot/id/statistical-geography/S92000003";
-		ajaxRequest.onreadystatechange = handleConstituenciesRequest;
+		url = "https://statistics.gov.scot/geometry?resource=http://statistics.gov.scot/id/statistical-geography/S92000003&collection=http://statistics.gov.scot/def/foi/collection/council-areas&within=http://statistics.gov.scot/id/statistical-geography/S92000003";
+		ajaxRequest.onreadystatechange = handleCouncilAreasRequest;
 		ajaxRequest.open('GET', url, true);
 		ajaxRequest.send(null);
 
