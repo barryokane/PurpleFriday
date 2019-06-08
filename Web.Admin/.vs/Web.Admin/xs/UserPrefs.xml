@@ -1,4 +1,41 @@
 ﻿<Properties StartupConfiguration="{D6E57C65-C1FD-4A7B-9BF0-42F3B2619DC1}|Default">
-  <MonoDevelop.Ide.ItemProperties.Web.Admin FirstBuild="True" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Startup.cs">
+    <Files>
+      <File FileName="Views/Shared/_Layout.cshtml" Line="1" Column="1" />
+      <File FileName="Controllers/MapController.cs" Line="24" Column="134" />
+      <File FileName="appsettings.json" Line="1" Column="1" />
+      <File FileName="_data/MapData.json" Line="17" Column="2" />
+      <File FileName="Models/MapPoint.cs" Line="4" Column="26" />
+      <File FileName="Controllers/HomeController.cs" Line="14" Column="10" />
+      <File FileName="Views/Home/Index.cshtml" Line="5" Column="1" />
+      <File FileName="appsettings.Development.json" Line="1" Column="1" />
+      <File FileName="Program.cs" Line="1" Column="1" />
+      <File FileName="Startup.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Web.Admin" expanded="True">
+            <Node name="Web.Admin" expanded="True">
+              <Node name="_data" expanded="True" />
+              <Node name="Controllers" expanded="True" />
+              <Node name="Models" expanded="True" />
+              <Node name="Views" expanded="True">
+                <Node name="Home" expanded="True" />
+                <Node name="Shared" expanded="True" />
+              </Node>
+              <Node name="Startup.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.Web.Admin PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
 </Properties>

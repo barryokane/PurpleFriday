@@ -30,3 +30,4 @@
 /Users/barryokane/Documents/Impact48/PurpleFriday/Web.Admin/obj/Debug/netcoreapp2.1/Web.Admin.dll
 /Users/barryokane/Documents/Impact48/PurpleFriday/Web.Admin/obj/Debug/netcoreapp2.1/Web.Admin.pdb
 /Users/barryokane/Documents/Impact48/PurpleFriday/Web.Admin/obj/Debug/netcoreapp2.1/Web.Admin.csproj.CopyComplete
+/Users/barryokane/Documents/Impact48/PurpleFriday/Web.Admin/obj/Debug/netcoreapp2.1/Razor/Views/Home/Map.g.cshtml.cs

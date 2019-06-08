@@ -58,6 +58,7 @@ namespace Web.Admin
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
         }
     }
 }
