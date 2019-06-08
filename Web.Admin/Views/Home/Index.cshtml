@@ -127,8 +127,10 @@
 				for (const interaction of interactions) {
 					popupString = popupString + "<div><img src=\"" + interaction.img + "\"/><b>" + interaction.twitterHandle + "</b></div>";
 				}
-				L.popup().setContent(popupString).setLatLng(e.latlng).openOn(map);
+			} else {
+				popupString = "<p>No messages from this area yet!</p>";
 			}
+			L.popup().setContent(popupString).setLatLng(e.latlng).openOn(map);
 		}
 
 
