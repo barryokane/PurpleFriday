@@ -6,6 +6,8 @@ namespace Web.Admin.Models
     [JsonObject(MemberSerialization.OptIn)]
     public class MapPoint
     {
+        [JsonProperty]
+        public string Id { get; set; }
         [JsonProperty("img")]
         public string Img { get; set; }
         [JsonProperty]
