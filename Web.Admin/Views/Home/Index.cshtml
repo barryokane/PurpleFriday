@@ -113,7 +113,7 @@
 		function showInteractions(e) {
 			var interactions = interactionsForLayer(e.target);
 			var popupString = "";
-			if (interactions) {
+			if (interactions.length > 0) {
 				for (const interaction of interactions) {
 					popupString = popupString + "<div><img src=\"" + interaction.img + "\"/><b>" + interaction.twitterHandle + "</b></div>";
 				}
