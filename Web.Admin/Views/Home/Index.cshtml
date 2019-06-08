@@ -156,7 +156,7 @@ ViewData["Title"] = "Home Page";
             if (interactions.length > 0) {
                 var popupInteractions = [];
                 for (const interaction of interactions) {
-                    popupInteractions.push("<div><img src=\"" + interaction.img + "\"/><p><b>" + interaction.twitterHandle + "</b></p></div>");
+                    popupInteractions.push("<div><img src=\"" + interaction.img + "\"/><p style=\"float:left\"><b>" + interaction.twitterHandle + "</b></p><p style=\"float:right;margin-right:10px\"><a href=\"" + interaction.tweetUrl + "\">Link</a></p><div style=\"clear:both;\"></div></div>");
                 }
                 popupString = popupInteractions.join("<hr>");
             }
