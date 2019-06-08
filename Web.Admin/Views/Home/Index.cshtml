@@ -34,7 +34,7 @@
                             && ajaxRequest.status == 200) {
                                 var interactions = JSON.parse(ajaxRequest.responseText);
                                 for (const interaction of interactions) {
-                                  L.marker(interaction.geo).bindPopup("<img src=\"" + interaction.image +  "\"/><p>" + interaction.text + "</p>").addTo(map);
+                                  L.marker(interaction.geo).bindPopup("<img src=\"" + interaction.img +  "\"/><p>" + interaction.text + "</p>").addTo(map);
                                 }
                         }
                 }
