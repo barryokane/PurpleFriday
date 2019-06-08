@@ -12,6 +12,8 @@ namespace Web.Admin.Models
         public string Text { get; set; }
         [JsonProperty]
         public string TwitterHandle { get; set; }
+        [JsonProperty]
+        public double[] Geo { get; set; }
 
         public MapPoint()
         {
