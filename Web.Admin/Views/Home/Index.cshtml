@@ -1,51 +1,49 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
-<div id="map" style="width: 600px; height: 400px;"></div>
-<script>
-
-        function getXmlHttpObject() {
-                if (window.XMLHttpRequest) { return new XMLHttpRequest(); }
-                if (window.ActiveXObject)  { return new ActiveXObject("Microsoft.XMLHTTP"); }
-                return null;
-        }
-
-        // set up AJAX request
-        ajaxRequest = getXmlHttpObject();
-        if (ajaxRequest == null) {
-                alert("This browser does not support HTTP Request");
-        } else {
-
-                // set up the map
-                map = new L.Map('map');
-
-                // create the tile layer with correct attribution
-                var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-                var osmAttrib='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
-                var osm = new L.TileLayer(osmUrl, {minZoom: 5, maxZoom: 10, attribution: osmAttrib});           
-
-                // start the map in South-East England
-                map.setView(new L.LatLng(56.8, -4.2),6);
-                map.addLayer(osm);
-
-                function stateChanged() {
-			console.log(ajaxRequest.readyState);
-			console.log(ajaxRequest.status);
-                        if (ajaxRequest.readyState == 4
-                            && ajaxRequest.status == 200) {
-                                var interactions = JSON.parse(ajaxRequest.responseText);
-                                for (const interaction of interactions) {
-                                  L.marker(interaction.geo).bindPopup("<img src=\"" + interaction.image +  "\"/><p>" + interaction.text + "</p>").addTo(map);
-                                }
-                        }
-                }
-
-                path = "api/map/";
-                ajaxRequest.onreadystatechange = stateChanged;
-                ajaxRequest.open('GET', path, true);
-                ajaxRequest.send(null);
-
-        }
-
-</script>
 }
 
+<h1>Test Map</h1>
+
+<div id="map" style="width: 600px; height: 400px;"></div>
+<script>function getXmlHttpObject() {
+        if (window.XMLHttpRequest) { return new XMLHttpRequest(); }
+        if (window.ActiveXObject) { return new ActiveXObject("Microsoft.XMLHTTP"); }
+        return null;
+    }
+
+    // set up AJAX request
+    ajaxRequest = getXmlHttpObject();
+    if (ajaxRequest == null) {
+        alert("This browser does not support HTTP Request");
+    } else {
+
+        // set up the map
+        map = new L.Map('map');
+
+        // create the tile layer with correct attribution
+        var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osmAttrib = 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
+        var osm = new L.TileLayer(osmUrl, { minZoom: 5, maxZoom: 10, attribution: osmAttrib });
+
+        // start the map in South-East England
+        map.setView(new L.LatLng(56.8, -4.2), 6);
+        map.addLayer(osm);
+
+        function stateChanged() {
+            console.log(ajaxRequest.readyState);
+            console.log(ajaxRequest.status);
+            if (ajaxRequest.readyState == 4
+                && ajaxRequest.status == 200) {
+                var interactions = JSON.parse(ajaxRequest.responseText);
+                for (const interaction of interactions) {
+                    L.marker(interaction.geo).bindPopup("<img src=\"" + interaction.image + "\"/><p>" + interaction.text + "</p>").addTo(map);
+                }
+            }
+        }
+
+        path = "api/map/";
+        ajaxRequest.onreadystatechange = stateChanged;
+        ajaxRequest.open('GET', path, true);
+        ajaxRequest.send(null);
+
+    }</script>

@@ -1,15 +1,12 @@
 ﻿<Properties StartupConfiguration="{D6E57C65-C1FD-4A7B-9BF0-42F3B2619DC1}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="appsettings.json">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Views/Home/Index.cshtml">
     <Files>
-      <File FileName="Views/Shared/_Layout.cshtml" Line="1" Column="1" />
-      <File FileName="Controllers/MapController.cs" Line="45" Column="56" />
-      <File FileName="appsettings.json" Line="1" Column="1" />
-      <File FileName="_data/MapData.json" Line="8" Column="9" />
-      <File FileName="Models/MapPoint.cs" Line="9" Column="27" />
-      <File FileName="Views/Home/Index.cshtml" Line="5" Column="1" />
-      <File FileName="appsettings.Development.json" Line="1" Column="1" />
-      <File FileName="Program.cs" Line="1" Column="1" />
-      <File FileName="Startup.cs" Line="39" Column="56" />
+      <File FileName="Views/Moderate/Index.cshtml" Line="7" Column="36" />
+      <File FileName="Views/Shared/_Layout.cshtml" Line="50" Column="83" />
+      <File FileName="Views/Home/Index.cshtml" Line="48" Column="15" />
+      <File FileName="Views/Home/About.cshtml" Line="37" Column="1" />
+      <File FileName="Views/Home/Map.cshtml" Line="1" Column="1" />
+      <File FileName="Views/Home/Privacy.cshtml" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -18,19 +15,16 @@
             <Node name="Web.Admin" expanded="True">
               <Node name="_data" expanded="True" />
               <Node name="Controllers" expanded="True" />
-              <Node name="Models" expanded="True" />
-              <Node name="Properties" expanded="True" />
               <Node name="Views" expanded="True">
-                <Node name="Home" expanded="True" />
+                <Node name="Home" expanded="True">
+                  <Node name="Index.cshtml" selected="True" />
+                </Node>
+                <Node name="Moderate" expanded="True" />
                 <Node name="Shared" expanded="True" />
               </Node>
-              <Node name="appsettings.json" selected="True" />
             </Node>
           </Node>
         </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
@@ -38,10 +32,7 @@
   <MonoDevelop.Ide.ItemProperties.Web.Admin PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/barryokane/Documents/Impact48/PurpleFriday/Web.Admin/Controllers/HomeController.cs" relfile="Controllers/HomeController.cs" line="20" column="1" />
-      <Breakpoint file="/Users/barryokane/Documents/Impact48/PurpleFriday/Web.Admin/Controllers/MapController.cs" relfile="Controllers/MapController.cs" line="34" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
 </Properties>
