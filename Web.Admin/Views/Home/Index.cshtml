@@ -4,7 +4,7 @@ ViewData["Title"] = "Home Page";
 
 <h1>Test Map</h1>
 
-<div id="map" style="width: 600px; height: 400px;"></div>
+<div id="map" style="width: 70vw; height: 40vw;"></div>
 <script>
 
     var lastYearsInteractions = [
@@ -107,7 +107,7 @@ ViewData["Title"] = "Home Page";
         var osm = new L.TileLayer(osmUrl, {minZoom: 5, maxZoom: 10, attribution: osmAttrib});
 
         // start the map in South-East England
-        map.setView(new L.LatLng(56.8, -4.2), 6);
+        map.setView(new L.LatLng(56.8, -4.2), 7);
         map.addLayer(osm);
 
         var geojson;
@@ -152,15 +152,15 @@ ViewData["Title"] = "Home Page";
 
         function showInteractions(e) {
             var interactions = interactionsForLayer(e.target.toGeoJSON());
-            var popupString = "";
+            var popupString = "<p style=\"text-align:center\">No messages from this area yet!<br/>Maybe <b>you</b> could be the first? Just tweet a photo with the hashtags <b>#PurpleFriday</b> and the name of the town where you took the photo (e.g. <b>#Perth</b>).</p>";
             if (interactions.length > 0) {
+                var popupInteractions = [];
                 for (const interaction of interactions) {
-                    popupString = popupString + "<div><img src=\"" + interaction.img + "\"/><b>" + interaction.twitterHandle + "</b></div>";
+                    popupInteractions.push("<div><img src=\"" + interaction.img + "\"/><p><b>" + interaction.twitterHandle + "</b></p></div>");
                 }
-            } else {
-                popupString = "<p>No messages from this area yet!</p>";
+                popupString = popupInteractions.join("<hr>");
             }
-            L.popup({"maxHeight":350}).setContent(popupString).setLatLng(e.latlng).openOn(map);
+            L.popup({"maxHeight": 400, "minWidth": 300}).setContent(popupString).setLatLng(e.latlng).openOn(map);
         }
 
 
