@@ -36,10 +36,14 @@ namespace Web.Admin.Controllers
         [HttpGet("{id}")]
         public JsonResult Get(string id)
         {
-            List<MapPoint> mapData = GetData(dataFilePath);
-            MapPoint point = mapData.FirstOrDefault(x=>x.TweetId==id);
+            MapPoint point = GetDataSingle(id);
             return Json(point);
         }
+
+        /// <summary>
+        /// Test hardcoded data
+        /// </summary>
+        /// <returns>Hardcoded list of map data</returns>
         [HttpGet("test")]
         public JsonResult Test()
         {
@@ -51,31 +55,59 @@ namespace Web.Admin.Controllers
         [HttpPost]
         public void Post([FromBody]MapPoint value)
         {
-            List<MapPoint> mapData = GetData(dataFilePath);
-            //todo: check for duplicates?
-            mapData.Add(value);
-
-            // serialize JSON to a string and then write string to a file
-            System.IO.File.WriteAllText(dataFilePath, JsonConvert.SerializeObject(mapData));
+            //todo: validation?
+            AddNewData(value);
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public void Put(string id, [FromBody]MapPoint point)
         {
+            UpdateData(id, point);
         }
 
         // DELETE api/values/5
-        [HttpDelete("{id}")]
+        /*[HttpDelete("{id}")]
         public void Delete(int id)
         {
-        }
+        }*/
         
         List<MapPoint> GetData(string jsonFilePath)
         {
             string json = System.IO.File.ReadAllText(jsonFilePath);
             List<MapPoint> mapData = JsonConvert.DeserializeObject<List<MapPoint>>(json);
             return mapData;
+        }
+
+        MapPoint GetDataSingle(string id)
+        {
+            List<MapPoint> mapData = GetData(dataFilePath);
+            MapPoint point = mapData.FirstOrDefault(x => x.TweetId == id);
+            return point;
+        }
+
+        void AddNewData(MapPoint point)
+        {
+            List<MapPoint> mapData = GetData(dataFilePath);
+            //todo: check for duplicates?
+            mapData.Add(point);
+
+            // serialize JSON to a string and then write string to a file
+            System.IO.File.WriteAllText(dataFilePath, JsonConvert.SerializeObject(mapData));
+        }
+
+        void UpdateData(string id, MapPoint point)
+        {
+            List<MapPoint> mapData = GetData(dataFilePath);
+
+            //remove the one we are replacing
+            List<MapPoint> newData = mapData.Where(m => m.TweetId != id).ToList();
+
+            //add the new one
+            newData.Add(point);
+
+            // serialize JSON to a string and then write string to a file
+            System.IO.File.WriteAllText(dataFilePath, JsonConvert.SerializeObject(newData));
         }
     }
 }
