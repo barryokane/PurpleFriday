@@ -2,6 +2,7 @@
     ViewData["Title"] = "Moderate";
 }
 <h1>Moderate</h1>
+<span id="LastRefresh"></span>
 
 <style>
     #imageStream div {
@@ -166,6 +167,10 @@
             $('*[data-editClick="true"]').on("click",
                 function () { ShowEdit($(this).attr('id')); }
             );
+
+            $("#LastRefresh").html("Last auto refresh: " + (new Date()).toTimeString());
+        }).fail(function () {
+            $("#LastRefresh").html("ERROR.  Please refresh page");
         });
     }</script>
 }
