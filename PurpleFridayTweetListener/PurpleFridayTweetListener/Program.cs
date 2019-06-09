@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Geocoding.Microsoft;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Nito.AsyncEx;
 using PurpleFridayTweetListener.Communicator;
@@ -47,8 +48,12 @@ namespace PurpleFridayTweetListener
                 SetUpWriteToFile(config["Logging:LogFolderPath"]);
             }
 
+            var locationFinderConfig = new LocationFinderConfiguration();
+            config.Bind("LocationFinder", locationFinderConfig);
 
-            var tweetListener = new TweetListener(streamConfig, tweetListenerConfig, dataForwarderConfig, new DataForwarderFactory(dataForwarderConfig), new LocationFinder.LocationFinder());
+            var locationFinder = new LocationFinder.LocationFinder(locationFinderConfig, new BingMapsGeocoder(locationFinderConfig.BingMapsKey));
+
+            var tweetListener = new TweetListener(streamConfig, tweetListenerConfig, dataForwarderConfig, new DataForwarderFactory(dataForwarderConfig), locationFinder);
 
             tweetListener.StartStream(args.Any()? args[0]: tweetListenerConfig.Filter);
 

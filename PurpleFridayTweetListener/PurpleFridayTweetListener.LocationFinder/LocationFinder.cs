@@ -14,11 +14,12 @@ namespace PurpleFridayTweetListener.LocationFinder
     public class LocationFinder : ILocationFinder
     {
         private IGeocoder _geoCoder;
-        private static readonly string BING_KEY = "Avmx12pASs7Py8SGg_nPgxHPF0eeUY3DzR7LKsPP9Su6toxQhnUudgJ5p-rOebFm";
+        private readonly LocationFinderConfiguration _configuration;
 
-        public LocationFinder()
+        public LocationFinder(LocationFinderConfiguration configuration, IGeocoder geocoder)
         {
-            _geoCoder = new BingMapsGeocoder("Avmx12pASs7Py8SGg_nPgxHPF0eeUY3DzR7LKsPP9Su6toxQhnUudgJ5p-rOebFm");
+            _configuration = configuration;
+            _geoCoder = geocoder;
         }
 
         public async Task<LocationFinderResult> GetLocationFromStringAsync(string locationText)
