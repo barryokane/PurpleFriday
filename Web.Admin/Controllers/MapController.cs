@@ -62,9 +62,7 @@ namespace Web.Admin.Controllers
         [HttpPost]
         public void Post([FromBody]MapPoint value)
         {
-            var authHeader = (string)this.Request.Headers["Authorization"];
-
-            if (!string.IsNullOrEmpty(API_KEY) && authHeader == null || authHeader != API_KEY)
+            if (CheckAuthHeaders())
             {
                 return;
             }
@@ -77,6 +75,11 @@ namespace Web.Admin.Controllers
         [HttpPut("{id}")]
         public void Put(string id, [FromBody]MapPoint point)
         {
+            if (CheckAuthHeaders())
+            {
+                return;
+            }
+
             UpdateData(id, point);
         }
 
@@ -130,6 +133,18 @@ namespace Web.Admin.Controllers
 
             // serialize JSON to a string and then write string to a file
             System.IO.File.WriteAllText(dataFilePath, JsonConvert.SerializeObject(newData));
+        }
+
+        private bool CheckAuthHeaders()
+        {
+            var authHeader = (string)Request.Headers["Authorization"];
+
+            if (!string.IsNullOrEmpty(API_KEY) && authHeader == null || authHeader != API_KEY)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
