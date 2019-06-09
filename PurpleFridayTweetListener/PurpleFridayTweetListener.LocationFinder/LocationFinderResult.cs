@@ -8,5 +8,6 @@ namespace PurpleFridayTweetListener.LocationFinder
     {
         public Coordinates Coordinates { get; set; }
         public LocationConfidence Confidence { get; set; }
+        public string AdminDistrict2 { get; set; }
     }
 }

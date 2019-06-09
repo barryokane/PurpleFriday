@@ -33,7 +33,11 @@ namespace PurpleFridayTweetListener.LocationFinder
                     return null;
                 }
 
-                var matchedLocation = addresses.Where(x => x.Type == EntityType.PopulatedPlace && x.Confidence <= ConfidenceLevel.Medium).FirstOrDefault();
+                var matchedLocation = addresses.Where(x => x.Type == EntityType.PopulatedPlace 
+                                            && x.Confidence <= ConfidenceLevel.Medium
+                                            && x.CountryRegion == "United Kingdom"
+                                            && x.AdminDistrict == "Scotland"
+                                            ).FirstOrDefault();
                 if(matchedLocation == null)
                 {
                     return null;
@@ -43,6 +47,8 @@ namespace PurpleFridayTweetListener.LocationFinder
                 Console.WriteLine("Coordinates: " + addresses.First().Coordinates.Latitude + ", " + addresses.First().Coordinates.Longitude);
                 return new LocationFinderResult
                 {
+                    AdminDistrict2 = (matchedLocation.AdminDistrict2 == "Western Isles" ) ?
+                                    "Na h-Eileanan Siar" : matchedLocation.AdminDistrict2,
                     Coordinates = new Coordinates
                     {
                         Latitude = matchedLocation.Coordinates.Latitude,

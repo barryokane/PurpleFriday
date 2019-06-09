@@ -120,6 +120,7 @@ namespace PurpleFridayTweetListener
                 Text = tweet.Text,
                 TweetId = tweet.IdStr,
                 Coords = new double[] { centerPoint.Latitude, centerPoint.Longitude },
+                Area = "TODO", //todo: get area for this location!
                 TwitterHandle = tweet.CreatedBy.ScreenName,
                 LocationConfidence = LocationConfidence.EXACT.ToString(),
                 TweetUrl = tweet.Url
@@ -146,6 +147,7 @@ namespace PurpleFridayTweetListener
                     Text = tweet.Text,
                     TweetId = tweet.IdStr,
                     Coords = new double[] { locationResult.Coordinates.Latitude, locationResult.Coordinates.Longitude },
+                    Area = locationResult.AdminDistrict2,
                     TwitterHandle = tweet.CreatedBy.ScreenName,
                     LocationConfidence = locationResult.Confidence.ToString(),
                     TweetUrl = tweet.Url

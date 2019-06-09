@@ -19,6 +19,8 @@ namespace PurpleFridayTweetListener.Communicator
         [JsonProperty(PropertyName = "geo")]
         public double[] Coords { get; set; }
 
+        public string Area { get; set; }
+
         public DateTime CreatedDate { get; set; }
 
         public string TweetId { get; set; }

@@ -23,9 +23,20 @@ namespace PurpleFridayTweetListener.LocationFinder
         {
             var locationFinder = new LocationFinder(new LocationFinderConfiguration { BingMapsKey = MAPS_KEY }, geocoder);
 
-            var coords = await locationFinder.GetLocationFromStringAsync("Glasgow");
-            
+            var coords = await locationFinder.GetLocationFromStringAsync("Alva");
+
             Assert.NotNull(coords);
+            Assert.AreEqual(coords.AdminDistrict2, "Clackmannanshire");
+        }
+        [Test]
+        public async Task TestWesternIsles()
+        {
+            var locationFinder = new LocationFinder(new LocationFinderConfiguration { BingMapsKey = MAPS_KEY }, geocoder);
+
+            var coords = await locationFinder.GetLocationFromStringAsync("Stornoway");
+
+            Assert.NotNull(coords);
+            Assert.AreEqual(coords.AdminDistrict2, "Na h-Eileanan Siar");
         }
 
         [Test]
