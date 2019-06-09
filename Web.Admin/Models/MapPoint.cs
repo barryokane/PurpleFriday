@@ -42,6 +42,8 @@ namespace Web.Admin.Models
         public string LocationConfidence { get; set; }
         [JsonProperty]
         public double[] Geo { get; set; }
+        [JsonProperty]
+        public string Area { get; set; }
 
         public MapPoint()
         {
