@@ -194,11 +194,6 @@ $(document).ready(() => {
       .on('click', () => { displayPanel.remove(); })
       .appendTo(displayPanel);
 
-    var msnry = new Masonry(displayPanel[0], {
-      itemSelector: '.interaction-image',
-      columnWidth: 200
-    });
-
 
     // let popupString = "<p style=\"text-align:center\">No messages from this area yet!<br/>Maybe <b>you</b> could be the first? Just tweet a photo with the hashtags <b>#PurpleFriday</b> and the name of the town where you took the photo (e.g. <b>#Perth</b>).</p>";
     // if (newInteractions.length > 0) {
