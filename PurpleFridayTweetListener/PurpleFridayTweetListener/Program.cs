@@ -17,12 +17,6 @@ namespace PurpleFridayTweetListener
         private static FileStream ostrm;
         private static StreamWriter writer;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="args">
-        ///     -file = Send output to log file (log file created with current timestamp and ends when application closes
-        /// </param>
         static void Main(string[] args)
         {
             AsyncContext.Run(() => MainAsync(args));
