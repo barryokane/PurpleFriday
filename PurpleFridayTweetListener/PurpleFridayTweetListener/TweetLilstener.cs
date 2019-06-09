@@ -50,8 +50,8 @@ namespace PurpleFridayTweetListener
                     return;
                 }
 
-                //the tweet must have media
-                if (targs.Tweet.Media == null || !targs.Tweet.Media.Any())
+                //ignore the tweet if it must have media
+                if (_listenerConfig.ImageRequired && (targs.Tweet.Media == null || !targs.Tweet.Media.Any()))
                 {
                     return;
                 }

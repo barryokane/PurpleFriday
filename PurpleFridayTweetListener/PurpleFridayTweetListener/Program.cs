@@ -30,15 +30,6 @@ namespace PurpleFridayTweetListener
 
         private static Task MainAsync(string[] args)
         {
-            var useFileOutput = false;
-            foreach(var arg in args)
-            {
-                if (arg.Equals("-file"))
-                {
-                    useFileOutput = true;
-                }
-            }
-
             //https://blog.bitscry.com/2017/05/30/appsettings-json-in-net-core-console-app/
             //https://blogs.msdn.microsoft.com/fkaduk/2017/02/22/using-strongly-typed-configuration-in-net-core-console-app/
             var builder = new ConfigurationBuilder()
@@ -57,7 +48,7 @@ namespace PurpleFridayTweetListener
             var tweetListenerConfig = new TweetListenerConfig();
             config.Bind("Listener", tweetListenerConfig);
 
-            if (useFileOutput)
+            if (bool.Parse(config["Logging:LogToFile"]))
             {
                 SetUpWriteToFile(config["Logging:LogFolderPath"]);
             }
