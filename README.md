@@ -44,7 +44,7 @@ The data forwarder is the application that is expecting the tweet data, complete
   ```
  
 ## Listener
-The listener communicates Twitter (either be listening to tweets, or replying) and also filters out tweets that don't successfully meet the criteria of having a location (or hashtag containing a location name). The requirement of having an image is optional and can be configured in these settings. 
+The settings for the Listener are:
 
  * Filter - this can be a # hashtag or a keyword and is used to tell Twitter that you're only interested in specific tweets
  * ReplyText - This is a string that will be sent in a reply to a successful (matches criteria) tweet. The reply tweet will come from the same account as the one used for the API credentials.
@@ -57,6 +57,15 @@ The listener communicates Twitter (either be listening to tweets, or replying) a
     "ReplyText": "Thanks for tweeting us!",
     "SendReply": true,
     "ImageRequired": true
+  }
+  ```
+  
+  ## Location Finder
+  The location finder uses Microsoft's Bing maps and needs an API key for it to work. The instructions for how to gain a key are in the pre-requisites section above. 
+  
+  ```
+    "LocationFinder": {
+    "BingMapsKey": ""
   }
   ```
   
@@ -84,3 +93,29 @@ The listener communicates Twitter (either be listening to tweets, or replying) a
   Stream started
   ```
 which will indicate that the app has successfully started and the Twitter stream is listening.
+
+
+
+# How it works
+
+## Listener 
+The listener communicates Twitter (either be listening to tweets, or replying) and also filters out tweets that don't successfully meet the criteria of having a location (or hashtag containing a location name). The requirement of having an image is optional and can be configured in these settings. 
+
+  ## Location Finder
+  The location finder uses Microsoft's Bing maps to try and identify a location from a hashtag in a Tweet, if the Tweet doesn't contain its own location data. The application iterates through all of the hashtags in a tweet and searches each one using the maps API until it finds a `MEDIUM` or `HIGH` match. If no match is found, the tweet is ignored and not forwarded on. 
+  
+  ## Data Forwarder
+  Once the application has a tweet that matches all of the criteria, including a location, it will then forward the data using the DataForwarder settings in the configuration. 
+  The format of the data forwarded is: 
+  
+  ```
+  {
+   "tweetId":"", //the tweet id 
+   "img":"", //the url of the tweet's first image
+    "text":"", //the tweet's text
+    "createdDate":"2019-06-09T10:47:52+01:00", //the datetime of the tweet (yyyy-MM-ddTHH:mm:ss ISO)            
+    "twitterHandle":"", //the user's screen name who tweeted
+    "tweetUrl":"", // the url of the original tweet
+    "locationConfidence":"", //EXACT (location from tweet), HIGH (bing had high confidence in location), or MEDIUM (bing had medium confidence)
+    "geo":[57.145481109619141,-2.1027200222015381] //[latitude, longitude]
+  ```
