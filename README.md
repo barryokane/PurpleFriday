@@ -32,6 +32,7 @@ These are the keys that you got from the Twitter developer account earlier, they
  * UserAccessSecret
 
 ### DataForwarder
+<<<<<<< HEAD
 The data forwarder is the application that is expecting the tweet data, complete with location. There are two configuration settings for the DataForwarder:
 * BaseUri - the base URL for the DataForwarder application e.g. https://localhost.local/
 * SendTweetDataPath - the API path expecting the tweet info
@@ -119,4 +120,16 @@ The listener communicates Twitter (either be listening to tweets, or replying) a
     "locationConfidence":"", //EXACT (location from tweet), HIGH (bing had high confidence in location), or MEDIUM (bing had medium confidence)
     "geo":[] //[latitude, longitude] - as a double[]
   }
-  ```
+
+### Deployment
+The is a `run.sh` script in the `deployment` folder that is the start of us deploying to a remote host.  Run as follows:
+```
+./run.sh user ip_address ../
+```
+```
+user - the user on the remote host
+ip_address - the IP address of the remote host
+../ - the root of this repository
+```
+
+It's currently assumed that the remote host is running Ubuntu 18.04 LTS.
