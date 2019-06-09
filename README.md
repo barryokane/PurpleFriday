@@ -120,3 +120,15 @@ The listener communicates Twitter (either be listening to tweets, or replying) a
     "geo":[] //[latitude, longitude] - as a double[]
   }
   ```
+## Deployment
+The is a `run.sh` script in the `deployment` folder that is the start of us deploying to a remote host.  Run as follows:
+```
+./run.sh user ip_address ../
+```
+```
+user - the user on the remote host
+ip_address - the IP address of the remote host
+../ - the root of this repository
+```
+
+It's currently assumed that the remote host is running Ubuntu 18.04 LTS.

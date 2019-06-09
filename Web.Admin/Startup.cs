@@ -65,7 +65,9 @@ namespace Web.Admin
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
+            //app.UseCookiePolicy();
+
+            app.UseCors(builder => builder.AllowAnyOrigin());
             app.UseAuthentication();
 
             app.UseMvc(routes =>
