@@ -117,6 +117,6 @@ The listener communicates Twitter (either be listening to tweets, or replying) a
     "twitterHandle":"", //the user's screen name who tweeted
     "tweetUrl":"", // the url of the original tweet
     "locationConfidence":"", //EXACT (location from tweet), HIGH (bing had high confidence in location), or MEDIUM (bing had medium confidence)
-    "geo":[57.145481109619141,-2.1027200222015381] //[latitude, longitude]
+    "geo":[] //[latitude, longitude] - as a double[]
   }
   ```
