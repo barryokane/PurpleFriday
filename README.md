@@ -73,3 +73,14 @@ The listener communicates Twitter (either be listening to tweets, or replying) a
     "LogFolderPath": "C:/Users/markm/Code/PurpleFriday/PurpleFridayTweetListener/PurpleFridayTweetListener/Logs/"
   }
   ```
+  
+  ## Running the application
+  The application uses `.net core 2.2` and can be run on Windows, Mac and Linux using the .net core command line. If you navigate to the `PurpleFridayTweetListener` folder in the command line and run:
+  `dotnet run`
+  you should see the log messages:
+  
+  ```
+  {Twitter API name}
+  Stream started
+  ```
+which will indicate that the app has successfully started and the Twitter stream is listening.
