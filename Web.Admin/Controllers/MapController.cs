@@ -32,7 +32,7 @@ namespace Web.Admin.Controllers
         {
             List<MapPoint> mapData = GetData();
             return Json(mapData);
-        }
+        }   
 
         // POST api/values
         [HttpPost]

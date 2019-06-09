@@ -27,4 +27,8 @@
     <ProjectReference Include="..\PurpleFridayTweetListener.LocationFinder\PurpleFridayTweetListener.LocationFinder.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Logs\" />
+  </ItemGroup>
+
 </Project>

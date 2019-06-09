@@ -14,6 +14,15 @@ namespace PurpleFridayTweetListener
 {
     class Program
     {
+        private static FileStream ostrm;
+        private static StreamWriter writer;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args">
+        ///     -file = Send output to log file (log file created with current timestamp and ends when application closes
+        /// </param>
         static void Main(string[] args)
         {
             AsyncContext.Run(() => MainAsync(args));
@@ -21,6 +30,15 @@ namespace PurpleFridayTweetListener
 
         private static Task MainAsync(string[] args)
         {
+            var useFileOutput = false;
+            foreach(var arg in args)
+            {
+                if (arg.Equals("-file"))
+                {
+                    useFileOutput = true;
+                }
+            }
+
             //https://blog.bitscry.com/2017/05/30/appsettings-json-in-net-core-console-app/
             //https://blogs.msdn.microsoft.com/fkaduk/2017/02/22/using-strongly-typed-configuration-in-net-core-console-app/
             var builder = new ConfigurationBuilder()
@@ -39,6 +57,12 @@ namespace PurpleFridayTweetListener
             var tweetListenerConfig = new TweetListenerConfig();
             config.Bind("Listener", tweetListenerConfig);
 
+            if (useFileOutput)
+            {
+                SetUpWriteToFile(config["Logging:LogFolderPath"]);
+            }
+
+
             var tweetListener = new TweetListener(streamConfig, tweetListenerConfig, dataForwarderConfig, new DataForwarderFactory(dataForwarderConfig), new LocationFinder.LocationFinder());
 
             tweetListener.StartStream(args.Any()? args[0]: tweetListenerConfig.Filter);
@@ -46,6 +70,25 @@ namespace PurpleFridayTweetListener
             Console.ReadKey();
 
             return null;
+        }
+
+        private static void SetUpWriteToFile(string fileName)
+        {
+
+            try
+            {
+                ostrm = new FileStream(Path.Combine(Environment.CurrentDirectory, $"{fileName}{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.txt"), FileMode.OpenOrCreate, FileAccess.Write);
+                writer = new StreamWriter(ostrm);
+                writer.AutoFlush = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Cannot open {fileName} for writing");
+                Console.WriteLine(e.Message);
+                return;
+            }
+
+            Console.SetOut(writer);
         }
 
 

@@ -356,3 +356,6 @@ MigrationBackup/
 Web.Admin/bin/
 Web.Admin/obj/
 prod.list.1
+
+# Ignore the file logs from the tweet listener
+**/Logs/*.txt
