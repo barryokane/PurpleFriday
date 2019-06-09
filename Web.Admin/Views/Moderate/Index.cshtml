@@ -1,0 +1,176 @@
+﻿@{
+    ViewData["Title"] = "Moderate";
+}
+<h1>Moderate</h1>
+<span id="LastRefresh"></span>
+
+<style>
+    #imageStream div {
+        display: inline-block;
+        height: 240px
+    }
+    #imageStream img {
+        display: block;
+        width: 200px;
+        height: 200px;
+        margin: 6px;
+        cursor: pointer;
+    }
+    #imageStream img.hide_true {
+      opacity: 0.25;
+      filter: alpha(opacity=50);
+    }
+    .modal-body {
+        max-height: 300px; overflow-y: scroll;
+    }
+</style>
+
+<div id="imageStream">
+</div>
+
+<div id="editModal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Moderate Tweet</h4>
+      </div>
+      <div class="modal-body">
+          <form id="editForm">
+              <div class="form-group">
+                  <label for="hide">
+                      Hide from Map?
+                      <input type="checkbox" name="Hide" id="Hide">
+                  </label>
+              </div>
+              <div class="form-group">
+                  <label for="Geo">Geo</label>
+                  <input id="Geo" type="text" class="form-control">
+              </div>
+              <hr />
+              <div class="form-group">
+                  <label for="TweetId">TweetId</label>
+                  <input id="TweetId" type="text" class="form-control" disabled />
+              </div>
+
+              <div class="form-group">
+                  <label for="Img">Img</label>
+                  <input id="Img" type="text" class="form-control" disabled />
+              </div>
+
+              <div class="form-group">
+                  <label for="Text">Text</label>
+                  <input id="Text" type="text" class="form-control" disabled />
+              </div>
+
+              <div class="form-group">
+                  <label for="CreatedDate">CreatedDate</label>
+                  <input id="CreatedDate" type="text" class="form-control" disabled />
+              </div>
+
+              <div class="form-group">
+                  <label for="TwitterHandle">TwitterHandle</label>
+                  <input id="TwitterHandle" type="text" class="form-control" disabled />
+              </div>
+              <div class="form-group">
+                  <label for="TweetUrl">TweetUrl</label>
+                  <input id="TweetUrl" type="text" class="form-control" disabled />
+              </div>
+              <div class="form-group">
+                  <label for="LocationConfidence">LocationConfidence</label>
+                  <input id="LocationConfidence" type="text" class="form-control" disabled />
+              </div>
+          </form>
+          <span id="editLoader" style="display: none;">Loading...</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="SaveChanges">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+@section Scripts {
+
+<script src="~/lib/mustache/mustache.min.js"></script>
+<script id="previewTemplate" type="x-tmpl-mustache">
+    <div>
+        <img data-editclick="true" class="hide_{{ hide }}" id="{{ tweetId }}" src="{{ img }}">
+        <span>{{ createdDateDisplay }}</span>
+    </div>
+</script>
+
+<script>$(function () {
+        UpdateImages();
+        var timerId = setInterval(UpdateImages, 30 * 1000); //load new tweets every x seconds
+    });
+
+    function ShowEdit(id) {
+        $("#editLoader").hide();
+        $("#editForm").show();
+        $.get("/api/map/" + id, function (data) {
+            $('#editModal').modal('show');
+            $('#TweetId').val(data.tweetId);
+            $('#Img').val(data.img);
+            $('#CreatedDate').val(data.createdDate);
+            $('#TwitterHandle').val(data.twitterHandle);
+            $('#TweetUrl').val(data.tweetUrl);
+            $('#Text').val(data.text);
+            $('#LocationConfidence').val(data.locationConfidence);
+            $('#Geo').val(data.geo);
+            $('#Hide').prop('checked', data.hide);
+        });
+    }
+
+    $('#SaveChanges').click(function () {
+        $("#editLoader").show();
+        $("#editForm").hide();
+        var newPoint =
+        {
+            "TweetId": $('#TweetId').val(),
+            "CreatedDate": $('#CreatedDate').val(),
+            "img": $('#Img').val(),
+            "TweetUrl": $('#TweetUrl').val(),
+            "LocationConfidence": $('#LocationConfidence').val(),
+            "text": $('#Text').val(),
+            "twitterhandle": $('#TwitterHandle').val(),
+            "geo": $('#Geo').val().split(","),
+            "hide": $('#Hide').is(":checked")
+        }
+        $.ajax({
+            url: "/api/map/" + $('#TweetId').val(),
+            type: "PUT",
+            data: JSON.stringify(newPoint),
+            contentType: "application/json"
+        }).done(function () {
+            $('#editModal').modal('hide');
+            $('#' + newPoint.TweetId).removeClass().addClass('hide_' + newPoint.hide);
+        })
+            .fail(function () {
+                alert("There has been an error. Unable to save updates.");
+            })
+    });
+
+    function UpdateImages() {
+        $.get("/api/map?getall=true", function (data) {
+            var template = $('#previewTemplate').html();
+            for (i = 0; i < data.length; i++) {
+                if (!$('#' + data[i].tweetId).length) {
+                    var rendered = Mustache.render(template, data[i]);
+                    $("#imageStream").prepend(rendered);
+                }
+            }
+
+            $('*[data-editClick="true"]').on("click",
+                function () { ShowEdit($(this).attr('id')); }
+            );
+
+            $("#LastRefresh").html("Last auto refresh: " + (new Date()).toTimeString());
+        }).fail(function () {
+            $("#LastRefresh").html("ERROR.  Please refresh page");
+        });
+    }</script>
+}
