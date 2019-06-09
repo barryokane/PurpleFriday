@@ -30,7 +30,7 @@ namespace Web.Admin.Controllers
         [HttpGet]
         public JsonResult Get(bool? getall)
         {
-            List<MapPoint> mapData = (getall.HasValue && getall.Value) ? GetData(dataFilePath) : GetDataNotHidden(dataFilePath);
+            List<MapPoint> mapData = (getall.HasValue && getall.Value) ? GetAllData(dataFilePath) : GetData(dataFilePath);
             return Json(mapData);
         }
         [HttpGet("{id}")]
@@ -47,7 +47,7 @@ namespace Web.Admin.Controllers
         [HttpGet("test")]
         public JsonResult Test()
         {
-            List<MapPoint> mapData = GetDataNotHidden(host.ContentRootPath + @"/_data/MapData_Test.json");
+            List<MapPoint> mapData = GetAllData(host.ContentRootPath + @"/_data/MapData_Test.json");
             return Json(mapData);
         }
 
@@ -72,31 +72,31 @@ namespace Web.Admin.Controllers
         {
         }*/
 
-        List<MapPoint> GetDataNotHidden(string jsonFilePath)
+        List<MapPoint> GetData(string jsonFilePath)
         {
-            List<MapPoint> mapData = GetData(jsonFilePath);
+            List<MapPoint> mapData = GetAllData(jsonFilePath);
             mapData = (from m in mapData
-                       where m.Hide.HasValue || !m.Hide.Value
+                       where !m.Hide.HasValue || !m.Hide.Value
                        select m).ToList();
             return mapData;
         }
-        List<MapPoint> GetData(string jsonFilePath)
+        List<MapPoint> GetAllData(string jsonFilePath)
         {
             string json = System.IO.File.ReadAllText(jsonFilePath);
             List<MapPoint> mapData = JsonConvert.DeserializeObject<List<MapPoint>>(json);
-            return mapData;
+            return mapData.OrderBy(m=>m.CreatedDate).ToList();
         }
 
         MapPoint GetDataSingle(string id)
         {
-            List<MapPoint> mapData = GetData(dataFilePath);
+            List<MapPoint> mapData = GetAllData(dataFilePath);
             MapPoint point = mapData.FirstOrDefault(x => x.TweetId == id);
             return point;
         }
 
         void AddNewData(MapPoint point)
         {
-            List<MapPoint> mapData = GetData(dataFilePath);
+            List<MapPoint> mapData = GetAllData(dataFilePath);
             //todo: check for duplicates?
             mapData.Add(point);
 
@@ -106,7 +106,7 @@ namespace Web.Admin.Controllers
 
         void UpdateData(string id, MapPoint point)
         {
-            List<MapPoint> mapData = GetData(dataFilePath);
+            List<MapPoint> mapData = GetAllData(dataFilePath);
 
             //remove the one we are replacing
             List<MapPoint> newData = mapData.Where(m => m.TweetId != id).ToList();

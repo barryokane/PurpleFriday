@@ -7,7 +7,12 @@
     #imageStream img {
         width: 200px;
         height: 200px;
-        margin: 6px; cursor: pointer;
+        margin: 6px;
+        cursor: pointer;
+    }
+    #imageStream img.hide_true {
+      opacity: 0.25;
+      filter: alpha(opacity=50);
     }
     .modal-body {
         max-height: 300px; overflow-y: scroll;
@@ -109,24 +114,26 @@
     $('#SaveChanges').click(function () {
         $("#editLoader").show();
         $("#editForm").hide();
+        var newPoint =
+        {
+            "TweetId": $('#TweetId').val(),
+            "CreatedDate": $('#CreatedDate').val(),
+            "img": $('#Img').val(),
+            "TweetUrl": $('#TwitterHandle').val(),
+            "LocationConfidence": $('#LocationConfidence').val(),
+            "text": $('#Text').val(),
+            "twitterhandle": $('#TwitterHandle').val(),
+            "geo": $('#Geo').val().split(","),
+            "hide": $('#Hide').is(":checked")
+        }
         $.ajax({
             url: "/api/map/" + $('#TweetId').val(),
             type: "PUT",
-            data: JSON.stringify(
-                {
-                    "TweetId": $('#TweetId').val(),
-                    "CreatedDate": $('#CreatedDate').val(),
-                    "img": $('#Img').val(),
-                    "TweetUrl": $('#TwitterHandle').val(),
-                    "LocationConfidence": $('#LocationConfidence').val(),
-                    "text": $('#Text').val(),
-                    "twitterhandle": $('#TwitterHandle').val(),
-                    "geo": $('#Geo').val().split(","),
-                    "hide": $('#Hide').is(":checked")
-                }),
+            data: JSON.stringify(newPoint),
             contentType: "application/json"
         }).done(function () {
             $('#editModal').modal('hide');
+            $('#' + newPoint.TweetId).removeClass().addClass('hide_' + newPoint.hide);
         })
             .fail(function () {
                 alert("There has been an error. Unable to save updates.");
@@ -136,10 +143,10 @@
     function UpdateImages() {
         $.get("/api/map?getall=true", function (data) {
             for (i = 0; i < data.length; i++) {
-                $("#imageStream").prepend($('<img>', { class: 'editClick', id: data[i].tweetId, src: data[i].img }));
+                $("#imageStream").prepend($('<img>', { "data-editClick": "true", class: 'hide_' + data[i].hide, id: data[i].tweetId, src: data[i].img }));
             }
 
-            $('.editClick').on("click",
+            $('*[data-editClick="true"]').on("click",
                 function () { ShowEdit($(this).attr('id')); }
             );
         });
