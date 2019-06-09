@@ -28,9 +28,26 @@ namespace Web.Admin.Controllers
 
         // GET: api/values
         [HttpGet]
-        public JsonResult Get()
+        public JsonResult Get(bool? getall)
         {
-            List<MapPoint> mapData = GetData();
+            List<MapPoint> mapData = (getall.HasValue && getall.Value) ? GetAllData(dataFilePath) : GetData(dataFilePath);
+            return Json(mapData);
+        }
+        [HttpGet("{id}")]
+        public JsonResult Get(string id)
+        {
+            MapPoint point = GetDataSingle(id);
+            return Json(point);
+        }
+
+        /// <summary>
+        /// Test hardcoded data
+        /// </summary>
+        /// <returns>Hardcoded list of map data</returns>
+        [HttpGet("test")]
+        public JsonResult Test()
+        {
+            List<MapPoint> mapData = GetAllData(host.ContentRootPath + @"/_data/MapData_Test.json");
             return Json(mapData);
         }   
 
@@ -38,31 +55,67 @@ namespace Web.Admin.Controllers
         [HttpPost]
         public void Post([FromBody]MapPoint value)
         {
-            List<MapPoint> mapData = GetData();
+            //todo: validation?
+            AddNewData(value);
+        }
+
+        // PUT api/values/5
+        [HttpPut("{id}")]
+        public void Put(string id, [FromBody]MapPoint point)
+        {
+            UpdateData(id, point);
+        }
+
+        // DELETE api/values/5
+        /*[HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+        }*/
+
+        List<MapPoint> GetData(string jsonFilePath)
+        {
+            List<MapPoint> mapData = GetAllData(jsonFilePath);
+            mapData = (from m in mapData
+                       where !m.Hide.HasValue || !m.Hide.Value
+                       select m).ToList();
+            return mapData;
+        }
+        List<MapPoint> GetAllData(string jsonFilePath)
+        {
+            string json = System.IO.File.ReadAllText(jsonFilePath);
+            List<MapPoint> mapData = JsonConvert.DeserializeObject<List<MapPoint>>(json);
+            return mapData.OrderBy(m=>m.CreatedDate).ToList();
+        }
+
+        MapPoint GetDataSingle(string id)
+        {
+            List<MapPoint> mapData = GetAllData(dataFilePath);
+            MapPoint point = mapData.FirstOrDefault(x => x.TweetId == id);
+            return point;
+        }
+
+        void AddNewData(MapPoint point)
+        {
+            List<MapPoint> mapData = GetAllData(dataFilePath);
             //todo: check for duplicates?
-            mapData.Add(value);
+            mapData.Add(point);
 
             // serialize JSON to a string and then write string to a file
             System.IO.File.WriteAllText(dataFilePath, JsonConvert.SerializeObject(mapData));
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        void UpdateData(string id, MapPoint point)
         {
-        }
+            List<MapPoint> mapData = GetAllData(dataFilePath);
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
-        
-        List<MapPoint> GetData()
-        {
-            string json = System.IO.File.ReadAllText(dataFilePath);
-            List<MapPoint> mapData = JsonConvert.DeserializeObject<List<MapPoint>>(json);
-            return mapData;
+            //remove the one we are replacing
+            List<MapPoint> newData = mapData.Where(m => m.TweetId != id).ToList();
+
+            //add the new one
+            newData.Add(point);
+
+            // serialize JSON to a string and then write string to a file
+            System.IO.File.WriteAllText(dataFilePath, JsonConvert.SerializeObject(newData));
         }
     }
 }

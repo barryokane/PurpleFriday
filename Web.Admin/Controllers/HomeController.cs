@@ -22,6 +22,11 @@ namespace Web.Admin.Controllers
             return View();
         }
 
+        public IActionResult Testing()
+        {
+            return View();
+        }
+
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";

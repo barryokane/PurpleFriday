@@ -1,43 +1,7 @@
 ﻿@{
     ViewData["Title"] = "About";
 }
+
+
 <h2>@ViewData["Title"]</h2>
 <h3>@ViewData["Message"]</h3>
-
-<p>Use this area to provide additional information.</p>
-
-
-
-<hr />
-<input type="button" value="Click me" id="TestPost" />
-
-
-
-@section Scripts {
-
-
-    <script>
-$("#TestPost").click(function () {
-        $.ajax({
-            url: "/api/map",
-            type: "POST",
-            data: JSON.stringify(
-            {
-                "img": "https://pbs.twimg.com/media/D8e7vBgWsAI0uns.jpg",
-                "text": "Text TEST",
-                "twitterhandle": "LGBTYS",
-                "geo": [57.83, -5.3]
-
-            }),
-            contentType: "application/json"
-        })
-    });
-
-
-/*
-$("#TestPost").click(function () {
-        $.post("/api/map", { name: "John", time: "2pm" });
-        }
-        );
-*/</script>
-}
