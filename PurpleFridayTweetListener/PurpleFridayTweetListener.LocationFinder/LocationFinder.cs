@@ -47,8 +47,7 @@ namespace PurpleFridayTweetListener.LocationFinder
                 Console.WriteLine("Coordinates: " + addresses.First().Coordinates.Latitude + ", " + addresses.First().Coordinates.Longitude);
                 return new LocationFinderResult
                 {
-                    AdminDistrict2 = (matchedLocation.AdminDistrict2 == "Western Isles" ) ?
-                                    "Na h-Eileanan Siar" : matchedLocation.AdminDistrict2,
+                    AdminDistrict2 = GetAreaName(matchedLocation.AdminDistrict2),
                     Coordinates = new Coordinates
                     {
                         Latitude = matchedLocation.Coordinates.Latitude,
@@ -64,6 +63,48 @@ namespace PurpleFridayTweetListener.LocationFinder
                 return null;
             }
 
+        }
+
+        public string GetAreaName(string bingName)
+        {
+            //we want to convert the area name into what is expected at map endpoint
+            Dictionary<string, string[]> mapping = new Dictionary<string, string[]>();
+            mapping["Na h-Eileanan Siar"] = new string[] { "Western Isles"};
+            mapping["West Dunbartonshire"] = new string[]{};
+            mapping["West Lothian"] = new string[] { };
+            mapping["Clackmannanshire"] = new string[] { };
+            mapping["Dumfries and Galloway"] = new string[] { };
+            mapping["East Ayrshire"] = new string[] { };
+            mapping["East Lothian"] = new string[] { };
+            mapping["East Renfrewshire"] = new string[] { };
+            mapping["Na h-Eileanan Siar"] = new string[] { };
+            mapping["Falkirk"] = new string[] { };
+            mapping["Highland"] = new string[] { };
+            mapping["Inverclyde"] = new string[] { };
+            mapping["Midlothian"] = new string[] { };
+            mapping["Moray"] = new string[] { };
+            mapping["North Ayrshire"] = new string[] { };
+            mapping["Orkney Islands"] = new string[] { };
+            mapping["Scottish Borders"] = new string[] { };
+            mapping["Shetland Islands"] = new string[] { };
+            mapping["South Ayrshire"] = new string[] { };
+            mapping["South Lanarkshire"] = new string[] { };
+            mapping["Stirling"] = new string[] { };
+            mapping["Aberdeen City"] = new string[] { };
+            mapping["Aberdeenshire"] = new string[] { };
+            mapping["Argyll and Bute"] = new string[] { };
+            mapping["City of Edinburgh"] = new string[] { "Edinburgh City" };
+            mapping["Renfrewshire"] = new string[] { };
+            mapping["Angus"] = new string[] { };
+            mapping["Dundee City"] = new string[] { "City of Dundee" };
+            mapping["East Dunbartonshire"] = new string[] { };
+            mapping["Fife"] = new string[] { };
+            mapping["Perth and Kinross"] = new string[] { };
+            mapping["Glasgow City"] = new string[] { "City of Glasgow" };
+            mapping["North Lanarkshire"] = new string[] { };
+
+            string match = mapping.FirstOrDefault(m => m.Value.Contains(bingName)).Key;
+            return (String.IsNullOrEmpty(match)) ? bingName : match;
         }
 
         public Coordinates GetCentralGeoCoordinate(IList<Coordinates> geoCoordinates)
