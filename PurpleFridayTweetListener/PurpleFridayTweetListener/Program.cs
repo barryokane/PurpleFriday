@@ -53,11 +53,11 @@ namespace PurpleFridayTweetListener
 
             var locationFinder = new LocationFinder.LocationFinder(locationFinderConfig, new BingMapsGeocoder(locationFinderConfig.BingMapsKey));
 
-            var tweetListener = new TweetListener(streamConfig, tweetListenerConfig, dataForwarderConfig, new DataForwarderFactory(dataForwarderConfig), locationFinder);
+            var tweetListener = new TweetListener(streamConfig, tweetListenerConfig, new DataForwarderFactory(dataForwarderConfig), locationFinder);
 
             tweetListener.StartStream(args.Any()? args[0]: tweetListenerConfig.Filter);
 
-            Console.ReadKey();
+            Console.Read();
 
             return null;
         }

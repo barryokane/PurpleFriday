@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration.Json;
+using Microsoft.Extensions.Configuration.EnvironmentVariables;
 
 namespace Web.Admin
 {
@@ -37,6 +39,8 @@ namespace Web.Admin
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(o => o.LoginPath = new PathString("/home/login"));
+
+            services.AddSingleton<IConfiguration>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
