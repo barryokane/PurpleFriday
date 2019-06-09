@@ -27,6 +27,14 @@ namespace Web.Admin.Models
         [JsonProperty]
         public DateTime CreatedDate { get; set; }
         [JsonProperty]
+        public string CreatedDateDisplay
+        {
+            get
+            {
+                return $"{CreatedDate.ToShortDateString()} {CreatedDate.ToShortTimeString()}";
+            }
+        }
+        [JsonProperty]
         public string TwitterHandle { get; set; }
         [JsonProperty]
         public string TweetUrl { get; set; }

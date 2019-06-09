@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "About";
+}
+
+
+<h2>Testing page</h2>
+
+
+
+<hr />
+<input type="button" value="Click me to create a test Tweet on map" id="TestPost" />
+
+
+
+@section Scripts {
+
+
+<script>$("#TestPost").click(function () {
+        $.ajax({
+            url: "/api/map",
+            type: "POST",
+            data: JSON.stringify(
+                {
+                    "TweetId": S4() + "-" + S4(),
+                    "CreatedDate": new Date().toISOString(),
+                    "img": "https://pbs.twimg.com/media/D8e7vBgWsAI0uns.jpg",
+                    "TweetUrl": "https://twitter.com/LGBTYS/status/1135926878202748930",
+                    "LocationConfidence": "High",
+                    "text": "Text TEST",
+                    "twitterhandle": "LGBTYS",
+                    "geo": [57.83, -5.3]
+
+                }),
+            contentType: "application/json"
+        })
+    });
+
+    function GetDate() { //2019-06-08T15:06:29+01:00
+        var dt = new Date();
+        return dt.getFullYear() + "-" + dt.getMonth() + "-" + dt.getDate() + "T" + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds() + "+01:00";
+    }
+
+    function S4() {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    }</script>
+}

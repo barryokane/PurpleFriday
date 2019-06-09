@@ -4,7 +4,12 @@
 <h1>Moderate</h1>
 
 <style>
+    #imageStream div {
+        display: inline-block;
+        height: 240px
+    }
     #imageStream img {
+        display: block;
         width: 200px;
         height: 200px;
         margin: 6px;
@@ -89,6 +94,13 @@
 
 @section Scripts {
 
+<script src="~/lib/mustache/mustache.min.js"></script>
+<script id="previewTemplate" type="x-tmpl-mustache">
+    <div>
+        <img data-editclick="true" class="hide_{{ hide }}" id="{{ tweetId }}" src="{{ img }}">
+        <span>{{ createdDateDisplay }}</span>
+    </div>
+</script>
 
 <script>$(function () {
         UpdateImages();
@@ -143,9 +155,12 @@
 
     function UpdateImages() {
         $.get("/api/map?getall=true", function (data) {
+            var template = $('#previewTemplate').html();
             for (i = 0; i < data.length; i++) {
-                if (!$('#' + data[i].tweetId).length)
-                    $("#imageStream").prepend($('<img>', { "data-editClick": "true", class: 'hide_' + data[i].hide, id: data[i].tweetId, src: data[i].img }));
+                if (!$('#' + data[i].tweetId).length) {
+                    var rendered = Mustache.render(template, data[i]);
+                    $("#imageStream").prepend(rendered);
+                }
             }
 
             $('*[data-editClick="true"]').on("click",
