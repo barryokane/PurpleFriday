@@ -3,7 +3,7 @@ require('./map.scss');
 const $ = require('jquery');
 const leaflet = require('leaflet');
 const areas = require('./areas.geo.json');
-import * as Masonry from 'masonry-layout'
+import Bricks from 'bricks.js'
 const lastYearsInteractions = [
   {
     "name": "Highland",
@@ -176,7 +176,7 @@ $(document).ready(() => {
       })
       .appendTo('body');
 
-    for (const interaction of interactions) {
+    for (const interaction of newInteractions) {
       const img = $('<img>')
         .addClass('interaction-image')
         .attr('src', interaction.img)
@@ -194,7 +194,15 @@ $(document).ready(() => {
       .on('click', () => { displayPanel.remove(); })
       .appendTo(displayPanel);
 
-
+    const instance = Bricks({
+      container: displayPanel[0],
+      packed: 'packed',
+      sizes: [
+        { columns: 2, gutter: 10 },
+        { mq: '768px', columns: 3, gutter: 25 },
+        { mq: '1024px', columns: 4, gutter: 50 }
+      ]
+    });
     // let popupString = "<p style=\"text-align:center\">No messages from this area yet!<br/>Maybe <b>you</b> could be the first? Just tweet a photo with the hashtags <b>#PurpleFriday</b> and the name of the town where you took the photo (e.g. <b>#Perth</b>).</p>";
     // if (newInteractions.length > 0) {
     //     var popupInteractions = [];

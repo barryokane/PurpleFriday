@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bricks.js": "^1.8.0",
     "leaflet": "^1.5.1",
     "masonry-layout": "^4.2.2"
   },
