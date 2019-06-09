@@ -35,7 +35,13 @@ namespace Web.Admin
             });
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddRazorPagesOptions(options =>
+            {
+                options.Conventions.AuthorizePage("/moderate");
+                options.Conventions.AllowAnonymousToPage("/Home/Login");
+            }); ;
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(o => o.LoginPath = new PathString("/home/login"));
