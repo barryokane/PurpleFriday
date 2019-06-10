@@ -21,6 +21,8 @@ namespace PurpleFridayTweetListener.Communicator
             }
             _config = config;
             _httpClient = new HttpClient();
+
+            _httpClient.DefaultRequestHeaders.Add(_config.APIKeyHeaderName, _config.APIKey);
             _httpClient.BaseAddress = config.BaseUrl;
         }
 

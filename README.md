@@ -35,15 +35,19 @@ These are the keys that you got from the Twitter developer account earlier, they
 The data forwarder is the application that is expecting the tweet data, complete with location. There are two configuration settings for the DataForwarder:
 * BaseUri - the base URL for the DataForwarder application e.g. https://localhost.local/
 * SendTweetDataPath - the API path expecting the tweet info
+* APIKeyHeaderName - this is the name of the header that the web app expects for the api key
+* APIKey - this is the API key for the website that will be sent with each request
 
   ```
   "DataForwarder": {
     "BaseUri": "", 
-    "SendTweetDataPath": ""
+    "SendTweetDataPath": "",
+    "APIKeyHeaderName": "e",
+    "APIKey": ""
   }
   ```
  
-## Listener
+### Listener
 The settings for the Listener are:
 
  * Filter - this can be a # hashtag or a keyword and is used to tell Twitter that you're only interested in specific tweets
@@ -60,7 +64,7 @@ The settings for the Listener are:
   }
   ```
   
-  ## Location Finder
+  ### Location Finder
   The location finder uses Microsoft's Bing maps and needs an API key for it to work. The instructions for how to gain a key are in the pre-requisites section above. 
   
   ```
@@ -69,7 +73,7 @@ The settings for the Listener are:
   }
   ```
   
-  ## Logging
+  ### Logging
   The logging redirects the console logs to a file, configured in the Logging section of the appsettings. When logging to a file, the logs will create a new log file each time the application starts, with the file name prefixed with the time and date that the application was started. 
   
   The logging settings:
@@ -132,3 +136,21 @@ ip_address - the IP address of the remote host
 ```
 
 It's currently assumed that the remote host is running Ubuntu 18.04 LTS.
+
+# Web Admin
+The web admin project handles the loading of the map and has the API for the incoming data from the tweet listener. It also contains an authorised moderataor section to hide tweets from the map. 
+
+## Configuration
+The web adming contains an `appsettings.json` file in the root folder with the following settings: 
+
+* IncomingMapAPIKey - this is that the API calls into the site from the tweet listener will be checked against
+* Authentication Username - this is the username for the moderator section
+* Authentication Password - this is the password for the moderator section
+
+```
+  "IncomingMapAPIKey": "",
+  "Authentication": {
+    "Username": "",
+    "Password":  ""
+  }
+```

@@ -9,6 +9,7 @@ using System.Text;
 using System.Runtime.Serialization;
 using Web.Admin.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,10 +21,16 @@ namespace Web.Admin.Controllers
     {
         private readonly IHostingEnvironment host;
         private readonly string dataFilePath;
+        private readonly IConfiguration _configuration;
+        private readonly string API_KEY;
 
-        public MapController(IHostingEnvironment host) {
+        public MapController(IHostingEnvironment host, IConfiguration configuration) {
             this.host = host;
             dataFilePath = host.ContentRootPath + @"/_data/MapData.json";
+
+            _configuration = configuration;
+
+            API_KEY = _configuration.GetValue<string>("IncomingMapAPIKey");
         }
 
         // GET: api/values
@@ -55,6 +62,11 @@ namespace Web.Admin.Controllers
         [HttpPost]
         public void Post([FromBody]MapPoint value)
         {
+            if (CheckAuthHeaders())
+            {
+                return;
+            }
+
             //todo: validation?
             AddNewData(value);
         }
@@ -63,6 +75,11 @@ namespace Web.Admin.Controllers
         [HttpPut("{id}")]
         public void Put(string id, [FromBody]MapPoint point)
         {
+            if (CheckAuthHeaders())
+            {
+                return;
+            }
+
             UpdateData(id, point);
         }
 
@@ -116,6 +133,18 @@ namespace Web.Admin.Controllers
 
             // serialize JSON to a string and then write string to a file
             System.IO.File.WriteAllText(dataFilePath, JsonConvert.SerializeObject(newData));
+        }
+
+        private bool CheckAuthHeaders()
+        {
+            var authHeader = (string)Request.Headers["Authorization"];
+
+            if (!string.IsNullOrEmpty(API_KEY) && authHeader == null || authHeader != API_KEY)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

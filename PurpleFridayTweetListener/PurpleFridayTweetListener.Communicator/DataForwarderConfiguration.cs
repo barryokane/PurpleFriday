@@ -8,5 +8,9 @@ namespace PurpleFridayTweetListener.Communicator
     {
         public Uri BaseUrl { get; set; }
         public string SendTweetDataPath { get; set; }
+
+        public string APIKeyHeaderName { get; set; }
+
+        public string APIKey { get; set; }
     }
 }

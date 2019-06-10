@@ -18,13 +18,12 @@ namespace PurpleFridayTweetListener
         private TweetListenerConfig _listenerConfig;
         private IDataForwarderFactory _tweetForwarderFactory;
 
-        public TweetListener(TwitterAuthConfig authConfig, TweetListenerConfig tweetListenerConfig, DataForwarderConfiguration tweetDataForwarderConfiguration, IDataForwarderFactory tweetForwarderFactory, ILocationFinder locationFinder)
+        public TweetListener(TwitterAuthConfig authConfig, TweetListenerConfig tweetListenerConfig, IDataForwarderFactory tweetForwarderFactory, ILocationFinder locationFinder)
         {
             _twitterAuthConfig = authConfig;
             _listenerConfig = tweetListenerConfig;
             _locationFinder = locationFinder;
             _tweetForwarderFactory = tweetForwarderFactory;
-
         }
 
         /// <summary>

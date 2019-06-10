@@ -1,4 +1,5 @@
-﻿@{
+﻿@model ModeratePageModel
+@{
     ViewData["Title"] = "Moderate";
 }
 <h1>Moderate</h1>
@@ -9,19 +10,30 @@
         display: inline-block;
         height: 240px
     }
+
     #imageStream img {
         display: block;
         width: 200px;
         height: 200px;
         margin: 6px;
         cursor: pointer;
+        object-fit: contain;
     }
-    #imageStream img.hide_true {
-      opacity: 0.25;
-      filter: alpha(opacity=50);
-    }
+
+        #imageStream img.hide_true {
+            opacity: 0.25;
+            filter: alpha(opacity=50);
+        }
+
     .modal-body {
-        max-height: 300px; overflow-y: scroll;
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+
+    #imageStream .created {
+        display: inline-block;
+        width: 100%;
+        text-align: center;
     }
 </style>
 
@@ -29,85 +41,83 @@
 </div>
 
 <div id="editModal" class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Moderate Tweet</h4>
-      </div>
-      <div class="modal-body">
-          <form id="editForm">
-              <div class="form-group">
-                  <label for="hide">
-                      Hide from Map?
-                      <input type="checkbox" name="Hide" id="Hide">
-                  </label>
-              </div>
-              <div class="form-group">
-                  <label for="Area">Area</label>
-                  <input id="Area" type="text" class="form-control" />
-              </div>
-              <hr />
-              <div class="form-group">
-                  <label for="Geo">Geo</label>
-                  <input id="Geo" type="text" class="form-control" disabled />
-              </div>
-              <div class="form-group">
-                  <label for="TweetId">TweetId</label>
-                  <input id="TweetId" type="text" class="form-control" disabled />
-              </div>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Moderate Tweet</h4>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <div class="form-group">
+                        <label for="hide">
+                            Hide from Map?
+                            <input type="checkbox" name="Hide" id="Hide">
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="Area">Area</label>
+                        <input id="Area" type="text" class="form-control" />
+                    </div>
+                    <hr />
+                    <div class="form-group">
+                        <label for="Geo">Geo</label>
+                        <input id="Geo" type="text" class="form-control" disabled />
+                    </div>
+                    <div class="form-group">
+                        <label for="TweetId">TweetId</label>
+                        <input id="TweetId" type="text" class="form-control" disabled />
+                    </div>
 
-              <div class="form-group">
-                  <label for="Img">Img</label>
-                  <input id="Img" type="text" class="form-control" disabled />
-              </div>
+                    <div class="form-group">
+                        <label for="Img">Img</label>
+                        <input id="Img" type="text" class="form-control" disabled />
+                    </div>
 
-              <div class="form-group">
-                  <label for="Text">Text</label>
-                  <input id="Text" type="text" class="form-control" disabled />
-              </div>
+                    <div class="form-group">
+                        <label for="Text">Text</label>
+                        <input id="Text" type="text" class="form-control" disabled />
+                    </div>
 
-              <div class="form-group">
-                  <label for="CreatedDate">CreatedDate</label>
-                  <input id="CreatedDate" type="text" class="form-control" disabled />
-              </div>
+                    <div class="form-group">
+                        <label for="CreatedDate">CreatedDate</label>
+                        <input id="CreatedDate" type="text" class="form-control" disabled />
+                    </div>
 
-              <div class="form-group">
-                  <label for="TwitterHandle">TwitterHandle</label>
-                  <input id="TwitterHandle" type="text" class="form-control" disabled />
-              </div>
-              <div class="form-group">
-                  <label for="TweetUrl">TweetUrl</label>
-                  <input id="TweetUrl" type="text" class="form-control" disabled />
-              </div>
-              <div class="form-group">
-                  <label for="LocationConfidence">LocationConfidence</label>
-                  <input id="LocationConfidence" type="text" class="form-control" disabled />
-              </div>
-          </form>
-          <span id="editLoader" style="display: none;">Loading...</span>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="SaveChanges">Save changes</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
+                    <div class="form-group">
+                        <label for="TwitterHandle">TwitterHandle</label>
+                        <input id="TwitterHandle" type="text" class="form-control" disabled />
+                    </div>
+                    <div class="form-group">
+                        <label for="TweetUrl">TweetUrl</label>
+                        <input id="TweetUrl" type="text" class="form-control" disabled />
+                    </div>
+                    <div class="form-group">
+                        <label for="LocationConfidence">LocationConfidence</label>
+                        <input id="LocationConfidence" type="text" class="form-control" disabled />
+                    </div>
+                </form>
+                <span id="editLoader" style="display: none;">Loading...</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="SaveChanges">Save changes</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
-
-
 @section Scripts {
 
 <script src="~/lib/mustache/mustache.min.js"></script>
 <script id="previewTemplate" type="x-tmpl-mustache">
     <div>
         <img data-editclick="true" class="hide_{{ hide }}" id="{{ tweetId }}" src="{{ img }}">
-        <span>{{ createdDateDisplay }}</span>
+        <span class="created">{{ createdDateDisplay }}</span>
     </div>
 </script>
 
-<script>$(function () {
+<script>
+    $(function () {
         UpdateImages();
         var timerId = setInterval(UpdateImages, 30 * 1000); //load new tweets every x seconds
     });
@@ -149,6 +159,9 @@
         $.ajax({
             url: "/api/map/" + $('#TweetId').val(),
             type: "PUT",
+            headers: {
+                "Authorization": "@Model.ApiKey"
+            },
             data: JSON.stringify(newPoint),
             contentType: "application/json"
         }).done(function () {
@@ -178,5 +191,6 @@
         }).fail(function () {
             $("#LastRefresh").html("ERROR.  Please refresh page");
         });
-    }</script>
+    }
+</script>
 }

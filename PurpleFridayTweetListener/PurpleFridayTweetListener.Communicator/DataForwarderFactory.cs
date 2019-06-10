@@ -14,11 +14,7 @@ namespace PurpleFridayTweetListener.Communicator
 
         public IDataFowarder NewForwarder()
         {
-            return new DataForwarder(new DataForwarderConfiguration
-            {
-                BaseUrl = _config.BaseUrl,
-                SendTweetDataPath = _config.SendTweetDataPath
-            });
+            return new DataForwarder(_config);
         }
     }
 }
