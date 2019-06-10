@@ -145,7 +145,7 @@ The web adming contains an `appsettings.json` file in the root folder with the f
 
 * IncomingMapAPIKey - this is that the API calls into the site from the tweet listener will be checked against
 * Authentication Username - this is the username for the moderator section
-* Authentication Passwrod - this is the password for the moderator section
+* Authentication Password - this is the password for the moderator section
 
 ```
   "IncomingMapAPIKey": "",
