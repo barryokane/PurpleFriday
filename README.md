@@ -125,6 +125,12 @@ The listener communicates Twitter (either be listening to tweets, or replying) a
   }
   ```
 ## Deployment
+
+### MS Azure
+- Web Admin project can be dployed straight to Azure using Visual Studio
+- The Tweet listener can be deployed as a WebJob on Azure. (TODO: update instructions here, but basically publish as an exe and upload as a zip file via Azure portal).
+
+### Other hosts
 The is a `run.sh` script in the `deployment` folder that is the start of us deploying to a remote host.  Run as follows:
 ```
 ./run.sh user ip_address ../
