@@ -1,4 +1,5 @@
-﻿@{
+﻿@model BasePageModel
+@{
     ViewData["Title"] = "About";
 }
 
@@ -19,10 +20,14 @@
 @section Scripts {
 
 
-<script>$("#TestPost").click(function () {
+    <script>
+$("#TestPost").click(function () {
         $.ajax({
             url: "/api/map",
             type: "POST",
+            headers: {
+                "Authorization": "@Model.ApiKey"
+            },
             data: JSON.stringify(
                 {
                     "TweetId": S4() + "-" + S4(),
