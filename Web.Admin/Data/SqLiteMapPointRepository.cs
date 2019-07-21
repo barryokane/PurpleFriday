@@ -44,10 +44,6 @@ namespace Web.Admin.Data
 
         public void AddNew(MapPoint mapPoint)
         {
-            if (!File.Exists(DbFile))
-            {
-                CreateDatabase();
-            }
 
             using (var cnn = SimpleDbConnection())
             {
@@ -105,30 +101,6 @@ namespace Web.Admin.Data
                     SqLiteMapPoint.FromMapPoint(mapPoint));
 
                 return affectedRows;
-            }
-        }
-
-        private static void CreateDatabase()
-        {
-            using (var cnn = SimpleDbConnection())
-            {
-                cnn.Open();
-                cnn.Execute(
-                    @"create table MapPoints
-                      (
-                         ID                           integer primary key AUTOINCREMENT,
-                         TweetId                      varchar(100) not null,
-                         Text                         nvarchar(300) not null,
-                         TweetUrl                     varchar(500) not null,
-                         Img                          varchar(500) not null,
-                         TwitterHandle                varchar(100) not null,
-                         LocationConfidence           varchar(100) not null,
-                         CreatedDate                  datetime not null,
-                         Geo_x                        real not null,
-                         Geo_y                        real not null,
-                         Area                         varchar(100) not null,
-                         Hide                         integer not null
-                      )");
             }
         }
     }

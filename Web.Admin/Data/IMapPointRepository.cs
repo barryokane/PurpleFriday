@@ -7,6 +7,7 @@ namespace Web.Admin.Data
 
     public interface IMapPointRepository
     {
+
         List<MapPoint> GetAll(bool includeHidden);
         MapPoint Get(int id);
         void AddNew(MapPoint mapPoint);
