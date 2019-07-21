@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="_data\" />
     <Folder Include="Views\Moderate\" />
     <Folder Include="Data\" />
     <Folder Include="Data\Models\" />
