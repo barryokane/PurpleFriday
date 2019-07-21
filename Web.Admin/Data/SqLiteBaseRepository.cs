@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data.SQLite;
+﻿using System.Data.SQLite;
 using System.IO;
 using Dapper;
 
@@ -7,27 +6,23 @@ namespace Web.Admin.Data
 {
     public class SqLiteBaseRepository
     {
+        protected string DbFile;
 
-        public static string DbFile
-        {
-            get { return Environment.CurrentDirectory + Path.DirectorySeparatorChar + "SimpleDb.sqlite"; }
-        }
-
-        public static SQLiteConnection SimpleDbConnection()
+        public SQLiteConnection SimpleDbConnection()
         {
             return new SQLiteConnection("Data Source=" + DbFile);
         }
 
-        public SqLiteBaseRepository()
+        public SqLiteBaseRepository(string dataFolderPath)
         {
+            DbFile = Path.Combine(dataFolderPath, "SimpleDb.sqlite");
             if (!File.Exists(DbFile))
             {
                 CreateDatabase();
             }
         }
 
-
-        protected static void CreateDatabase()
+        private void CreateDatabase()
         {
             using (var cnn = SimpleDbConnection())
             {

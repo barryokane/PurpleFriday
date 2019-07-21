@@ -12,6 +12,11 @@ namespace Web.Admin.Data
     public class SqLiteMapPointRepository : SqLiteBaseRepository, IMapPointRepository
     {
 
+        public SqLiteMapPointRepository(string dataFolderPath) : base(dataFolderPath)
+        {
+
+        }
+
         public List<MapPoint> GetAll(bool includeHidden)
         {
             List<MapPoint> list = null;

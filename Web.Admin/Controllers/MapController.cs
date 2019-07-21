@@ -32,8 +32,8 @@ namespace Web.Admin.Controllers
 
             API_KEY = _configuration.GetValue<string>("IncomingMapAPIKey");
 
-
-            db = new SqLiteMapPointRepository();
+            var dataFolderPath = host.ContentRootPath + @"/_datastore/";
+            db = new SqLiteMapPointRepository(dataFolderPath);
         }
 
         // GET: api/values
