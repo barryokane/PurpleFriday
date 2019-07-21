@@ -72,7 +72,6 @@ namespace Web.Admin.Data
 
         public MapPoint Get(int id)
         {
-            if (!File.Exists(DbFile)) return null;
 
             using (var cnn = SimpleDbConnection())
             {

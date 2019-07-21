@@ -35,9 +35,29 @@
         width: 100%;
         text-align: center;
     }
+
+    #HelpNotes {
+    }
 </style>
 
 <div id="imageStream">
+</div>
+
+<hr />
+
+<div id="HelpNotes">
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        Help
+    </button>
+    <div class="collapse" id="collapseExample">
+        <div class="well">
+            This page allows control over which Tweets are shown on the map.
+            <ul>
+                <li>Click on image to edit</li>
+                <li>Tweets that are hidden form the map will appear faded</li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 <div id="editModal" class="modal fade" tabindex="-1" role="dialog">
