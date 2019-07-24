@@ -10,6 +10,7 @@ using System.Runtime.Serialization;
 using Web.Admin.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Web.Admin.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,67 +21,59 @@ namespace Web.Admin.Controllers
     public class MapController : Controller
     {
         private readonly IHostingEnvironment host;
-        private readonly string dataFilePath;
         private readonly IConfiguration _configuration;
         private readonly string API_KEY;
+        private readonly IMapPointRepository db;
 
         public MapController(IHostingEnvironment host, IConfiguration configuration) {
             this.host = host;
-            dataFilePath = host.ContentRootPath + @"/_data/MapData.json";
 
             _configuration = configuration;
 
             API_KEY = _configuration.GetValue<string>("IncomingMapAPIKey");
+
+            var dataFolderPath = host.ContentRootPath + @"/_datastore/";
+            db = new SqLiteMapPointRepository(dataFolderPath);
         }
 
         // GET: api/values
         [HttpGet]
         public JsonResult Get(bool? getall)
         {
-            List<MapPoint> mapData = (getall.HasValue && getall.Value) ? GetAllData(dataFilePath) : GetData(dataFilePath);
+            List<MapPoint> mapData = db.GetAll(getall.HasValue && getall.Value);
             return Json(mapData);
         }
         [HttpGet("{id}")]
-        public JsonResult Get(string id)
+        public JsonResult Get(int id)
         {
-            MapPoint point = GetDataSingle(id);
+            MapPoint point = db.Get(id);
             return Json(point);
         }
 
-        /// <summary>
-        /// Test hardcoded data
-        /// </summary>
-        /// <returns>Hardcoded list of map data</returns>
-        [HttpGet("test")]
-        public JsonResult Test()
-        {
-            List<MapPoint> mapData = GetAllData(host.ContentRootPath + @"/_data/MapData_Test.json");
-            return Json(mapData);
-        }   
 
         // POST api/values
         [HttpPost]
         public void Post([FromBody]MapPoint value)
         {
-            if (CheckAuthHeaders())
+            if (!AuthHeaderIsValid())
             {
                 return;
             }
 
             //todo: validation?
-            AddNewData(value);
+            db.AddNew(value);
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
         public void Put(string id, [FromBody]MapPoint point)
         {
-            if (CheckAuthHeaders())
+            if (!AuthHeaderIsValid())
             {
                 return;
             }
 
-            UpdateData(id, point);
+            db.Update(point);
         }
 
         // DELETE api/values/5
@@ -89,57 +82,12 @@ namespace Web.Admin.Controllers
         {
         }*/
 
-        List<MapPoint> GetData(string jsonFilePath)
-        {
-            List<MapPoint> mapData = GetAllData(jsonFilePath);
-            mapData = (from m in mapData
-                       where !m.Hide.HasValue || !m.Hide.Value
-                       select m).ToList();
-            return mapData;
-        }
-        List<MapPoint> GetAllData(string jsonFilePath)
-        {
-            string json = System.IO.File.ReadAllText(jsonFilePath);
-            List<MapPoint> mapData = JsonConvert.DeserializeObject<List<MapPoint>>(json);
-            return mapData.OrderBy(m=>m.CreatedDate).ToList();
-        }
 
-        MapPoint GetDataSingle(string id)
-        {
-            List<MapPoint> mapData = GetAllData(dataFilePath);
-            MapPoint point = mapData.FirstOrDefault(x => x.TweetId == id);
-            return point;
-        }
-
-        void AddNewData(MapPoint point)
-        {
-            List<MapPoint> mapData = GetAllData(dataFilePath);
-            //todo: check for duplicates?
-            mapData.Add(point);
-
-            // serialize JSON to a string and then write string to a file
-            System.IO.File.WriteAllText(dataFilePath, JsonConvert.SerializeObject(mapData));
-        }
-
-        void UpdateData(string id, MapPoint point)
-        {
-            List<MapPoint> mapData = GetAllData(dataFilePath);
-
-            //remove the one we are replacing
-            List<MapPoint> newData = mapData.Where(m => m.TweetId != id).ToList();
-
-            //add the new one
-            newData.Add(point);
-
-            // serialize JSON to a string and then write string to a file
-            System.IO.File.WriteAllText(dataFilePath, JsonConvert.SerializeObject(newData));
-        }
-
-        private bool CheckAuthHeaders()
+        private bool AuthHeaderIsValid()
         {
             var authHeader = (string)Request.Headers["Authorization"];
 
-            if (!string.IsNullOrEmpty(API_KEY) && authHeader == null || authHeader != API_KEY)
+            if (string.IsNullOrEmpty(API_KEY) || authHeader == null || authHeader != API_KEY)
             {
                 return false;
             }

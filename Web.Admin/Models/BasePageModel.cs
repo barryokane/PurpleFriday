@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Web.Admin.Models
 {
-    public class ModeratePageModel
+    public class BasePageModel
     {
         public string ApiKey { get; set; }
     }

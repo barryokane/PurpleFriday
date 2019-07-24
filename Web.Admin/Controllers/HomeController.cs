@@ -35,7 +35,7 @@ namespace Web.Admin.Controllers
 
         public IActionResult Testing()
         {
-            return View();
+            return View(new BasePageModel { ApiKey = _configuration.GetValue<string>("IncomingMapAPIKey") });
         }
 
         public IActionResult Login()

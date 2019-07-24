@@ -21,7 +21,7 @@ namespace Web.Admin.Controllers
 
         public IActionResult Index()
         {
-            return View(new ModeratePageModel { ApiKey = _configuration.GetValue<string>("IncomingMapAPIKey") });
+            return View(new BasePageModel { ApiKey = _configuration.GetValue<string>("IncomingMapAPIKey") });
         }
     }
 }

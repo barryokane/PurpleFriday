@@ -6,6 +6,8 @@ namespace Web.Admin.Models
     [JsonObject(MemberSerialization.OptIn)]
     public class MapPoint
     {
+        [JsonProperty]
+        public int Id { get; set; }
         bool? _hide = false;
         [JsonProperty]
         public bool? Hide { 

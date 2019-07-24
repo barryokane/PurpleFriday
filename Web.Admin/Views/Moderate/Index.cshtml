@@ -1,4 +1,4 @@
-﻿@model ModeratePageModel
+﻿@model BasePageModel
 @{
     ViewData["Title"] = "Moderate";
 }
@@ -35,9 +35,29 @@
         width: 100%;
         text-align: center;
     }
+
+    #HelpNotes {
+    }
 </style>
 
 <div id="imageStream">
+</div>
+
+<hr />
+
+<div id="HelpNotes">
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        Help
+    </button>
+    <div class="collapse" id="collapseExample">
+        <div class="well">
+            This page allows control over which Tweets are shown on the map.
+            <ul>
+                <li>Click on image to edit</li>
+                <li>Tweets that are hidden form the map will appear faded</li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 <div id="editModal" class="modal fade" tabindex="-1" role="dialog">
@@ -67,6 +87,10 @@
                     <div class="form-group">
                         <label for="TweetId">TweetId</label>
                         <input id="TweetId" type="text" class="form-control" disabled />
+                    </div>
+                    <div class="form-group">
+                        <label for="Id">Id</label>
+                        <input id="Id" type="text" class="form-control" disabled />
                     </div>
 
                     <div class="form-group">
@@ -111,7 +135,7 @@
 <script src="~/lib/mustache/mustache.min.js"></script>
 <script id="previewTemplate" type="x-tmpl-mustache">
     <div>
-        <img data-editclick="true" class="hide_{{ hide }}" id="{{ tweetId }}" src="{{ img }}">
+        <img data-editclick="true" class="hide_{{ hide }}" id="{{ id }}" src="{{ img }}">
         <span class="created">{{ createdDateDisplay }}</span>
     </div>
 </script>
@@ -128,6 +152,7 @@
         $.get("/api/map/" + id, function (data) {
             $('#editModal').modal('show');
             $('#TweetId').val(data.tweetId);
+            $('#Id').val(data.id);
             $('#Img').val(data.img);
             $('#CreatedDate').val(data.createdDate);
             $('#TwitterHandle').val(data.twitterHandle);
@@ -145,6 +170,7 @@
         $("#editForm").hide();
         var newPoint =
         {
+            "Id": $('#Id').val(),
             "TweetId": $('#TweetId').val(),
             "CreatedDate": $('#CreatedDate').val(),
             "img": $('#Img').val(),
@@ -157,7 +183,7 @@
             "hide": $('#Hide').is(":checked")
         }
         $.ajax({
-            url: "/api/map/" + $('#TweetId').val(),
+            url: "/api/map/" + $('#Id').val(),
             type: "PUT",
             headers: {
                 "Authorization": "@Model.ApiKey"
@@ -166,7 +192,7 @@
             contentType: "application/json"
         }).done(function () {
             $('#editModal').modal('hide');
-            $('#' + newPoint.TweetId).removeClass().addClass('hide_' + newPoint.hide);
+            $('#' + newPoint.id).removeClass().addClass('hide_' + newPoint.hide);
         })
             .fail(function () {
                 alert("There has been an error. Unable to save updates.");
@@ -175,12 +201,11 @@
 
     function UpdateImages() {
         $.get("/api/map?getall=true", function (data) {
+            $("#imageStream").html("");
             var template = $('#previewTemplate').html();
             for (i = 0; i < data.length; i++) {
-                if (!$('#' + data[i].tweetId).length) {
-                    var rendered = Mustache.render(template, data[i]);
-                    $("#imageStream").prepend(rendered);
-                }
+                var rendered = Mustache.render(template, data[i]);
+                $("#imageStream").prepend(rendered);
             }
 
             $('*[data-editClick="true"]').on("click",
