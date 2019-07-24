@@ -20,13 +20,11 @@ namespace Web.Admin.Controllers
     [ApiController]
     public class MapController : Controller
     {
-        private readonly IHostingEnvironment host;
         private readonly IConfiguration _configuration;
         private readonly string API_KEY;
         private readonly IMapPointRepository db;
 
         public MapController(IHostingEnvironment host, IConfiguration configuration) {
-            this.host = host;
 
             _configuration = configuration;
 
