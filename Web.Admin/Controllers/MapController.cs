@@ -22,6 +22,7 @@ namespace Web.Admin.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly string API_KEY;
+        private readonly TweetResponse Settings;
         private readonly IMapPointRepository db;
 
         public MapController(IHostingEnvironment host, IConfiguration configuration) {
@@ -31,6 +32,7 @@ namespace Web.Admin.Controllers
             API_KEY = _configuration.GetValue<string>("IncomingMapAPIKey");
 
             var dataFolderPath = host.ContentRootPath + @"/_datastore/";
+            Settings = SettingsRepository.GetSettings(dataFolderPath);
             db = new SqLiteMapPointRepository(dataFolderPath);
         }
 
@@ -66,7 +68,8 @@ namespace Web.Admin.Controllers
             //todo: validation?
             db.AddNew(value);
 
-            return Json(new TweetResponse());
+
+            return Json(Settings);
         }
 
         // PUT api/values/5

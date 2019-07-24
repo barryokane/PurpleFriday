@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Web.Admin.Data;
 using Web.Admin.Models;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -18,17 +19,17 @@ namespace Web.Admin.Controllers
     public class SettingsController : Controller
     {
         private readonly IConfiguration _configuration;
-        private readonly string _settingsFilePath;
+        private readonly string _settingsFolderPath;
         public SettingsController(IHostingEnvironment host, IConfiguration configuration)
         {
-            _settingsFilePath = host.ContentRootPath + @"/_datastore/settings.json";
+            _settingsFolderPath = host.ContentRootPath + @"/_datastore/";
             _configuration = configuration;
         }
 
         // GET: /<controller>/
         public IActionResult Index()
         {
-            var settings = GetSettings(_settingsFilePath);
+            var settings = SettingsRepository.GetSettings(_settingsFolderPath);
 
             var model = new SettingsPageModel {
                 ApiKey = _configuration.GetValue<string>("IncomingMapAPIKey"),
@@ -41,7 +42,7 @@ namespace Web.Admin.Controllers
         [HttpPost]
         public IActionResult Index(TweetResponse tweetResponse)
         {
-            SaveSettings(_settingsFilePath, tweetResponse);
+            SettingsRepository.SaveSettings(_settingsFolderPath, tweetResponse);
 
             var model = new SettingsPageModel
             {
@@ -51,22 +52,5 @@ namespace Web.Admin.Controllers
             return View(model);
         }
 
-        TweetResponse GetSettings(string jsonFilePath)
-        {
-            if (!System.IO.File.Exists(jsonFilePath))
-            {
-                return new TweetResponse();
-            }
-
-            string json = System.IO.File.ReadAllText(jsonFilePath);
-            TweetResponse settings = JsonConvert.DeserializeObject<TweetResponse>(json);
-            return settings;
-        }
-
-        void SaveSettings(string jsonFilePath, TweetResponse settings)
-        {
-            // serialize JSON to a string and then write string to a file	
-            System.IO.File.WriteAllText(jsonFilePath, JsonConvert.SerializeObject(settings));
-        }
     }
 }
