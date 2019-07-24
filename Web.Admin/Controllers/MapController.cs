@@ -52,16 +52,23 @@ namespace Web.Admin.Controllers
 
 
         // POST api/values
+        /// <summary>
+        /// Save new Tweet to be shown on map
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>JSON that includes if reply tweet should be sent and if so what the text should be</returns>
         [HttpPost]
-        public void Post([FromBody]MapPoint value)
+        public JsonResult Post([FromBody]MapPoint value)
         {
             if (!AuthHeaderIsValid())
             {
-                return;
+                return Json(new object[] { "Access denied" });
             }
 
             //todo: validation?
             db.AddNew(value);
+
+            return Json(new TweetResponse());
         }
 
         // PUT api/values/5

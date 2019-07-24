@@ -17,10 +17,26 @@
 <a href="/api/map">View Raw Json</a>
 
 
+<hr />
+<input type="button" value="Test no API key" id="TestPost_nokey" />
+
+
 @section Scripts {
 
 
-    <script>
+<script>
+$("#TestPost_nokey").click(function () {
+        $.ajax({
+            url: "/api/map",
+            type: "POST",
+            data: JSON.stringify(
+                {
+                    "TweetId": S4() + "-" + S4(),
+                    "CreatedDate": new Date().toISOString()}),
+            contentType: "application/json"
+        })
+    });
+
 $("#TestPost").click(function () {
         $.ajax({
             url: "/api/map",
