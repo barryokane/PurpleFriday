@@ -97,6 +97,7 @@ namespace Web.Admin.Controllers
                         CreatedDate = tweet.CreatedAt,
                         LocationConfidence = "High",
                         Img = tweet.Media.First(x => x.MediaType != "video").MediaURLHttps,
+                        Geo = value.Geo
 
                     };
                     db.AddNew(newTweet);

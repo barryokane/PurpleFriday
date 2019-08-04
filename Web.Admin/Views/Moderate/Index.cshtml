@@ -255,6 +255,7 @@
         }).done(function () {
             $('#editModal').modal('hide');
             $('#' + newPoint.id).removeClass().addClass('hide_' + newPoint.hide);
+            UpdateImages();
         })
         .fail(function () {
             alert("There has been an error. Unable to save new Tweet.");
@@ -288,6 +289,7 @@
         }).done(function () {
             $('#editModal').modal('hide');
             $('#' + newPoint.id).removeClass().addClass('hide_' + newPoint.hide);
+            UpdateImages();
         })
         .fail(function () {
                 alert("There has been an error. Unable to save updates.");
@@ -295,8 +297,8 @@
     }
 
     function UpdateImages() {
+        $("#imageStream").html("loading...");
         $.get("/api/map?getall=true", function (data) {
-            $("#imageStream").html("");
             var template = $('#previewTemplate').html();
             for (i = 0; i < data.length; i++) {
                 var rendered = Mustache.render(template, data[i]);
