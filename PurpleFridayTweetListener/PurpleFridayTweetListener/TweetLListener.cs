@@ -61,24 +61,24 @@ namespace PurpleFridayTweetListener
                     return;
                 }
 
-                var forwardedTweetData = false;
+                string tweetResponseText;
 
                 Console.WriteLine($"Tweet received: {targs.Tweet.Text}");
                 
                 if (targs.Tweet.Place != null)
                 {
                     Console.WriteLine(targs.Json);
-                    forwardedTweetData = await HandleTweetWithLocationData(targs.Tweet);
+                    tweetResponseText = await HandleTweetWithLocationData(targs.Tweet);
                 }
                 else
                 {
-                    forwardedTweetData = await HandleTweetWithoutLocationData(targs.Tweet, filter);
+                    tweetResponseText = await HandleTweetWithoutLocationData(targs.Tweet, filter);
                 }
 
-                if (forwardedTweetData && _listenerConfig.SendReply)
+                if (!string.IsNullOrEmpty(tweetResponseText))
                 {
                     // We must add @screenName of the author of the tweet we want to reply to
-                    var textToPublish = $"@{targs.Tweet.CreatedBy.ScreenName} {_listenerConfig.ReplyText}";
+                    var textToPublish = $"@{targs.Tweet.CreatedBy.ScreenName} {tweetResponseText}";
                     var tweet = Tweet.PublishTweetInReplyTo(textToPublish, targs.Tweet.Id);
                     Console.WriteLine($"Publish success: {tweet != null}");
                 }
@@ -99,7 +99,7 @@ namespace PurpleFridayTweetListener
             stream.StartStreamMatchingAllConditions();
         }
 
-        protected async Task<bool> HandleTweetWithLocationData(ITweet tweet)
+        protected async Task<string> HandleTweetWithLocationData(ITweet tweet)
         {
             Console.WriteLine("Tweet place bounding box:");
             foreach (var coord in tweet.Place.BoundingBox.Coordinates)
@@ -128,7 +128,7 @@ namespace PurpleFridayTweetListener
             return await ForwardTweetData(tweetData);
         }
 
-        protected async Task<bool> HandleTweetWithoutLocationData(ITweet tweet, string filterHashtag)
+        protected async Task<string> HandleTweetWithoutLocationData(ITweet tweet, string filterHashtag)
         {
             //check all hashtags, one by one to see if they contain a location
             foreach (var hashtag in tweet.Hashtags.Where(x => $"#{x.Text}" != filterHashtag).ToList())
@@ -156,26 +156,27 @@ namespace PurpleFridayTweetListener
                 
             }
 
-            return false;
+            return null;
         }
 
-        private async Task<bool> ForwardTweetData(TweetData data)
+        private async Task<string> ForwardTweetData(TweetData data)
         {
             var tweetForwarder = _tweetForwarderFactory.NewForwarder();
+            string responseText;
 
             try
             {
-                await tweetForwarder.ForwardTweetData(data);
+                responseText = await tweetForwarder.ForwardTweetData(data);
 
             }
             catch (Exception e)
             {
                 Console.WriteLine($"Error forwarding data to client: {e.Message}");
                 Console.WriteLine(JsonConvert.SerializeObject(data));
-                return false;
+                return null;
             }
 
-            return true;
+            return responseText;
         }
     }
 }

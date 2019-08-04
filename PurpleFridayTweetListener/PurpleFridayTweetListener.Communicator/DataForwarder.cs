@@ -26,9 +26,22 @@ namespace PurpleFridayTweetListener.Communicator
             _httpClient.BaseAddress = config.BaseUrl;
         }
 
-        public async Task ForwardTweetData(TweetData data)
+        /// <summary>
+        /// Post Tweet to API
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns>Text string to use in response tweet (null or empty for no response)</returns>
+        public async Task<string> ForwardTweetData(TweetData data)
         {
-            var result = await _httpClient.PostAsync(_config.SendTweetDataPath, new JsonContent(data));
+            var response = await _httpClient.PostAsync(_config.SendTweetDataPath, new JsonContent(data));
+            if (response != null)
+            {
+                var jsonString = await response.Content.ReadAsStringAsync();
+                var tweetResponse = JsonConvert.DeserializeObject<TweetResponse>(jsonString);
+                return tweetResponse.ReplyTweetText;
+            }
+
+            return null;
         }
     }
 }

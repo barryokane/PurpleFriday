@@ -7,6 +7,6 @@ namespace PurpleFridayTweetListener.Communicator
 {
     public interface IDataFowarder
     {
-        Task ForwardTweetData(TweetData data);
+        Task<string> ForwardTweetData(TweetData data);
     }
 }
