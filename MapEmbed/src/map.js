@@ -3,7 +3,7 @@ require('./map.scss');
 const $ = require('jquery');
 const leaflet = require('leaflet');
 const areas = require('./areas.geo.json');
-import Bricks from 'bricks.js'
+
 const lastYearsInteractions = [
   {
     "name": "Highland",
@@ -65,25 +65,49 @@ window.jQuery = $;
 $(document).ready(() => {
   let geojson;
   let interactions = [];
-
+  debugger;
   const mapTag = $('script[src*="map.js"]');
   const apiEndpoint = mapTag.data('endpoint') || 'https://localhost:5001/api/map';
-  const height = mapTag.data('height') || '100vh';
-  const width = mapTag.data('width') || '100vw';
+  const mapRootClass = mapTag.data('map-block-class') || 'map';
+  const mapEmbedEl = $('#mapEmbed');
 
-  const mapContainer = $('<div></div>')
-    .css({
-      'height': height,
-      'width': width
-    });
-  mapContainer.insertAfter(mapTag);
+  const interactionPanelMarkup = '<div class="interaction-panel"></div>';
+  const interactionPanelChildrenMarkup = ['<h2 class="interaction-panel__title"></h2>', '<div class="interaction-panel__tweet-list"></div>', '<p class="interaction-panel__no-data">We don\'t have any tweets from this area yet.</p>'];
+  const rootContainerHtml = '<div class="' + mapRootClass + '__container"><div class="' + mapRootClass + '__map-container"></div>' + interactionPanelMarkup + '</div>';
 
+  const interactionPanelCardInfoMarkup = '<div class="tweet-card__info"><p class="tweet-card__name"></p><p class="tweet-card__date"></p><p class="tweet-card__text"></p></div>';
+  const interactionPanelCardMarkup = '<div class="tweet-card"><div class="tweet-card__image"><img /></div>' + interactionPanelCardInfoMarkup + '<a href="" target="_blank" class="tweet-card__link">View tweet</a></div>';
+  const tweetCardClasses = {
+    TweetName: 'tweet-card__name',
+    TweetImage: 'tweet-card__image',
+    TweetText: 'tweet-card__text',
+    TweetDate: 'tweet-card__date',
+    TweetLink: 'tweet-card__link'
+  };
 
-  const map = L.map(mapContainer[ 0 ], {
+  if (!mapEmbedEl.length) {
+    console.error('You need an element with the id #mapEmbed somewhere on the page.');
+  }
+
+  const $rootContainer = $(rootContainerHtml).appendTo(mapEmbedEl);
+  const $mapContainer = $('.' + mapRootClass + '__map-container');
+  const $interactionPanel = $('.interaction-panel', $rootContainer);
+
+  $rootContainer.css({
+    height: '100%',
+    width: '100%'
+  });
+
+  $mapContainer.css({
+    height: '100%',
+    width: '100%'
+  });
+
+  const map = L.map($mapContainer[0], {
     fullscreenControl: true,
     scrollWheelZoom: false,
     trackResize: true
-  }).setView([ 56.8, -4.2 ], 7);
+  }).setView([56.8, -4.2], 7);
 
   var osmAttrib = 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>';
   L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png', {
@@ -103,11 +127,11 @@ $(document).ready(() => {
 
   function style(feature) {
     return {
-        color: '#4C0099',
-        weight: 2,
-        opacity: 1,
-        fillColor: '#B266FF',
-        fillOpacity: getOpacity(feature)
+      color: '#4C0099',
+      weight: 2,
+      opacity: 1,
+      fillColor: '#B266FF',
+      fillOpacity: getOpacity(feature)
     };
   }
 
@@ -136,9 +160,9 @@ $(document).ready(() => {
 
   function onEachFeature(feature, layer) {
     layer.on({
-        mouseover: highlightFeature,
-        mouseout: resetHighlight,
-        click: showInteractions
+      mouseover: highlightFeature,
+      mouseout: resetHighlight,
+      click: showInteractions
     });
   }
 
@@ -146,13 +170,13 @@ $(document).ready(() => {
     var layer = e.target;
 
     layer.setStyle({
-        weight: 3,
-        color: '#B266FF',
-        fillOpacity: 0.7
+      weight: 3,
+      color: '#B266FF',
+      fillOpacity: 0.7
     });
 
     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-        layer.bringToFront();
+      layer.bringToFront();
     }
   }
 
@@ -166,52 +190,46 @@ $(document).ready(() => {
       return area === cleanName(newInteraction.area)
     });
 
-    const displayPanel = $('<div>')
-      .addClass('interaction-panel')
-      .css({
-        'top': mapContainer.offset().top,
-        'left': mapContainer.offset().left,
-        'width': mapContainer.outerWidth(),
-        'height': mapContainer.outerHeight()
-      })
-      .appendTo('body');
-
-    for (const interaction of newInteractions) {
-      const img = $('<img>')
-        .addClass('interaction-image')
-        .attr('src', interaction.img)
-        .appendTo(displayPanel);
-      console.log(img);
+    for (var markup of interactionPanelChildrenMarkup) {
+      $(markup).appendTo($interactionPanel);
     }
 
-    $('<div>')
-      .addClass('interactions-panel-close')
-      .css({
-        'top': mapContainer.offset().top + 10,
-        'left': mapContainer.outerWidth() - 25
-      })
-      .html('x')
-      .on('click', () => { displayPanel.remove(); })
-      .appendTo(displayPanel);
+    var $tweetList = $('.interaction-panel__tweet-list', $interactionPanel);
+    if (newInteractions.length) {
+      $('.interaction-panel__title').text(newInteractions[0].area);
+      $('.interaction-panel__no-data').remove();
+    }else {
+      $('.interaction-panel__title').remove();
+      $('.interaction-panel__tweet-list').remove();
+    }
 
-    const instance = Bricks({
-      container: displayPanel[0],
-      packed: 'packed',
-      sizes: [
-        { columns: 2, gutter: 10 },
-        { mq: '768px', columns: 3, gutter: 25 },
-        { mq: '1024px', columns: 4, gutter: 50 }
-      ]
-    });
-    // let popupString = "<p style=\"text-align:center\">No messages from this area yet!<br/>Maybe <b>you</b> could be the first? Just tweet a photo with the hashtags <b>#PurpleFriday</b> and the name of the town where you took the photo (e.g. <b>#Perth</b>).</p>";
-    // if (newInteractions.length > 0) {
-    //     var popupInteractions = [];
-    //     for (const interaction of newInteractions) {
-    //         popupInteractions.push("<div><img src=\"" + interaction.img + "\"/><p style=\"float:left\"><b>" + interaction.twitterHandle + "</b></p><p style=\"float:right;margin-right:10px\"><a href=\"" + interaction.tweetUrl + "\">Link</a></p><div style=\"clear:both;\"></div></div>");
-    //     }
-    //     popupString = popupInteractions.join("<hr>");
-    // }
-    // L.popup({"maxHeight": 400, "minWidth": 300}).setContent(popupString).setLatLng(e.latlng).openOn(map);
+    for (const interaction of newInteractions) {
+      const tweetCard = $(interactionPanelCardMarkup);
+      $('img', '.' + tweetCardClasses.TweetImage, tweetCard)
+        .attr('src', interaction.img);
+      console.log(interaction);
+      $('.' + tweetCardClasses.TweetName, tweetCard).text(interaction.twitterHandle || '');
+      $('.' + tweetCardClasses.TweetText, tweetCard).text(interaction.text || 'text text text');
+      $('.' + tweetCardClasses.TweetDate, tweetCard).text(interaction.createdDateDisplay || '');
+      $('.' + tweetCardClasses.TweetLink, tweetCard).attr('href', interaction.tweetUrl || '');
+
+      tweetCard.appendTo($tweetList);
+      console.log(tweetCard);
+    }
+
+    if (!$('.interactions-panel-close', '.map__interactions-panel').length) {
+      $('<button>')
+        .addClass('interaction-panel__close')
+        .text('x')
+        .on('click', () => { $interactionPanel.toggleClass('is-active'); resetInteractionPanel(); })
+        .appendTo($interactionPanel);
+    }
+
+    $interactionPanel.toggleClass('is-active');
+  }
+
+  function resetInteractionPanel() {
+    $interactionPanel.empty();
   }
 
   function cleanName(name) {
