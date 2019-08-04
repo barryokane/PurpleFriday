@@ -62,19 +62,23 @@ namespace Web.Admin.Controllers
             }
             //todo: validation?
 
-            if (value.Id > 0)
+            if (!String.IsNullOrEmpty(value.TweetId))
             {
-                db.AddNew(value);
-            } else
+                db.AddNew(value); // assume we have all tweet data
+            }
+            else if (!String.IsNullOrEmpty(value.TweetUrl))
             {
+
+                //assume url in form of https://twitter.com/LGBTYS/status/1135926878202748930
+                var tweetLongID = Convert.ToInt64(value.TweetUrl.Split('/').Last());
+
                 //get the details from TweetURL and save new one
 
                 Auth.SetUserCredentials(_configuration.GetValue<string>("TwitterCredentials:ConsumerKey"),
                     _configuration.GetValue<string>("TwitterCredentials:ConsumerSecret"),
                     _configuration.GetValue<string>("TwitterCredentials:UserAccessToken"),
                     _configuration.GetValue<string>("TwitterCredentials:UserAccessSecret"));
-
-                var tweet = Tweet.GetTweet(1135926878202748930);
+                var tweet = Tweet.GetTweet(tweetLongID);
                 if (tweet != null)
                 {
                     MapPoint newTweet = new MapPoint
@@ -94,8 +98,12 @@ namespace Web.Admin.Controllers
                 }
                 else
                 {
-                    throw new ApplicationException("Unable to find tweet!");
+                    throw new ApplicationException("Unable to find that tweet!");
                 }
+            }
+            else
+            {
+                throw new ApplicationException("Unable to add tweet!");
             }
 
         }
