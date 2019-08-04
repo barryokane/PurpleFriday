@@ -119,7 +119,7 @@ exports = module.exports = __webpack_require__(/*! ../node_modules/css-loader/di
 exports.i(__webpack_require__(/*! -!../node_modules/css-loader/dist/cjs.js!../node_modules/leaflet/dist/leaflet.css */ "./node_modules/css-loader/dist/cjs.js!./node_modules/leaflet/dist/leaflet.css"), "");
 
 // Module
-exports.push([module.i, "html, body {\n  padding: 0;\n  margin: 0; }\n\n.map__container {\n  position: relative; }\n  .map__container .interaction-panel {\n    display: none;\n    position: absolute;\n    z-index: 10000;\n    max-width: 100%;\n    padding: 1em 0 0;\n    overflow-x: hidden;\n    overflow-y: auto;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    left: 0;\n    background: #EDEDED;\n    flex-wrap: wrap;\n    font-family: 'Varela Round', sans-serif; }\n    .map__container .interaction-panel.is-active {\n      display: flex; }\n    .map__container .interaction-panel__title {\n      width: 100%;\n      margin: 1.5em 0 0.83em 0;\n      text-align: center;\n      color: #254684; }\n    .map__container .interaction-panel__tweet-list {\n      max-width: 87.5%;\n      margin: 0 auto;\n      padding: 0 6.75%;\n      color: #254684; }\n      @media (min-width: 768px) {\n        .map__container .interaction-panel__tweet-list {\n          display: flex;\n          flex-wrap: wrap;\n          justify-content: space-evenly; } }\n    .map__container .interaction-panel__close {\n      position: absolute;\n      top: 1em;\n      right: 1em;\n      font-size: 1.5em;\n      z-index: 1001;\n      background: none;\n      border: none;\n      cursor: pointer; }\n    .map__container .interaction-panel__no-data {\n      margin: 0 auto;\n      color: #254684; }\n  .map__container .tweet-card {\n    width: 100%;\n    margin: 0 0 2.5em 0;\n    padding: 0 0 1.5em;\n    box-shadow: 1px 1px 3px 1px #ccc;\n    text-align: center;\n    background: #fff; }\n    @media (min-width: 768px) {\n      .map__container .tweet-card {\n        width: 48%; } }\n    @media (min-width: 1200px) {\n      .map__container .tweet-card {\n        width: 30%; } }\n    .map__container .tweet-card__image > img {\n      width: 100%;\n      margin: 0 0 1.5625em 0; }\n    .map__container .tweet-card__info {\n      display: flex;\n      padding: 0.5em;\n      flex-wrap: wrap;\n      text-align: left; }\n    .map__container .tweet-card__name, .map__container .tweet-card__date {\n      color: #00b7ef;\n      margin: 0 0 1em 0;\n      flex: 1 1 auto; }\n    .map__container .tweet-card__date {\n      text-align: right; }\n    .map__container .tweet-card__text {\n      margin: 0 0 0.5em 0;\n      font-size: 1.5em;\n      flex: 0 1 100%; }\n    .map__container .tweet-card__link {\n      background: #254684;\n      text-transform: uppercase;\n      color: white;\n      border-radius: 30px;\n      padding: 1em 1.35em .85em;\n      display: inline-block;\n      -webkit-appearance: none;\n      border: 1px solid #254684;\n      text-decoration: none;\n      background: #ED008D;\n      border-color: #ED008D; }\n      .map__container .tweet-card__link:hover {\n        background: #ba006f;\n        border-color: #ba006f; }\n\n.interactions-panel-close {\n  position: absolute;\n  font-size: 20px;\n  cursor: pointer;\n  z-index: 1001; }\n\n.interaction-image {\n  width: 20%; }\n", ""]);
+exports.push([module.i, "html, body {\n  padding: 0;\n  margin: 0; }\n\n.map__container {\n  position: relative; }\n  .map__container .interaction-panel {\n    display: none;\n    position: absolute;\n    z-index: 10000;\n    max-width: 100%;\n    padding: 1em 0 0;\n    overflow-x: hidden;\n    overflow-y: auto;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    left: 0;\n    background: #EDEDED;\n    flex-wrap: wrap;\n    align-content: flex-start;\n    font-family: 'Varela Round', sans-serif; }\n    .map__container .interaction-panel.is-active {\n      display: flex; }\n    .map__container .interaction-panel__title {\n      width: 100%;\n      margin: 1.5em 0 0.83em 0;\n      text-align: center;\n      color: #254684; }\n    .map__container .interaction-panel__search {\n      text-align: center;\n      width: 100%;\n      margin: 0em 0 0.83em 0; }\n      .map__container .interaction-panel__search .label-text {\n        display: block;\n        color: #254684;\n        font-size: 16px;\n        line-height: 1.5; }\n      .map__container .interaction-panel__search input {\n        width: 80%;\n        padding: 10px 2%;\n        border-radius: 30px;\n        border: none;\n        padding: 0.5em;\n        font-size: 16px;\n        line-height: 1.5; }\n        @media (min-width: 768px) {\n          .map__container .interaction-panel__search input {\n            width: 50%; } }\n    .map__container .interaction-panel__search-info {\n      display: block;\n      margin: 0.25em 0 0;\n      line-height: 1.5;\n      color: #254684; }\n    .map__container .interaction-panel__search-clear {\n      background: none;\n      border: none;\n      cursor: pointer; }\n    .map__container .interaction-panel__tweet-list {\n      max-width: 87.5%;\n      margin: 0 auto;\n      padding: 0 6.75%;\n      color: #254684; }\n      @media (min-width: 768px) {\n        .map__container .interaction-panel__tweet-list {\n          display: flex;\n          max-width: none;\n          flex-wrap: wrap;\n          justify-content: space-evenly; } }\n    .map__container .interaction-panel__close {\n      position: absolute;\n      top: 1em;\n      right: 1em;\n      font-size: 1.5em;\n      z-index: 1001;\n      background: none;\n      border: none;\n      cursor: pointer; }\n    .map__container .interaction-panel__no-data {\n      margin: 0 auto;\n      color: #254684; }\n  .map__container .tweet-card {\n    width: 100%;\n    margin: 0 0 2.5em 0;\n    padding: 0 0 1.5em;\n    box-shadow: 1px 1px 3px 1px #ccc;\n    text-align: center;\n    background: #fff; }\n    @media (min-width: 768px) {\n      .map__container .tweet-card {\n        width: 48%; } }\n    @media (min-width: 1921px) {\n      .map__container .tweet-card {\n        width: 30%; } }\n    .map__container .tweet-card__image > img {\n      width: 100%;\n      margin: 0 0 1.5625em 0; }\n    .map__container .tweet-card__info {\n      display: flex;\n      padding: 0.5em;\n      flex-wrap: wrap;\n      text-align: left; }\n    .map__container .tweet-card__name, .map__container .tweet-card__date {\n      color: #00b7ef;\n      margin: 0 0 1em 0;\n      flex: 1 1 auto; }\n    .map__container .tweet-card__date {\n      text-align: right; }\n    .map__container .tweet-card__text {\n      margin: 0 0 0.5em 0;\n      font-size: 1.5em;\n      flex: 0 1 100%; }\n    .map__container .tweet-card__link {\n      background: #254684;\n      text-transform: uppercase;\n      color: white;\n      border-radius: 30px;\n      padding: 1em 1.35em .85em;\n      display: inline-block;\n      -webkit-appearance: none;\n      border: 1px solid #254684;\n      text-decoration: none;\n      background: #ED008D;\n      border-color: #ED008D; }\n      .map__container .tweet-card__link:hover {\n        background: #ba006f;\n        border-color: #ba006f; }\n\n.interactions-panel-close {\n  position: absolute;\n  font-size: 20px;\n  cursor: pointer;\n  z-index: 1001; }\n\n.interaction-image {\n  width: 20%; }\n", ""]);
 
 
 
@@ -25516,17 +25516,92 @@ const lastYearsInteractions = [
 window.$ = $;
 window.jQuery = $;
 
+$.throttle = jq_throttle = function( delay, no_trailing, callback, debounce_mode ) {
+  // After wrapper has stopped being called, this timeout ensures that
+  // `callback` is executed at the proper times in `throttle` and `end`
+  // debounce modes.
+  var timeout_id,
+    
+    // Keep track of the last time `callback` was executed.
+    last_exec = 0;
+  
+  // `no_trailing` defaults to falsy.
+  if ( typeof no_trailing !== 'boolean' ) {
+    debounce_mode = callback;
+    callback = no_trailing;
+    no_trailing = undefined;
+  }
+  
+  // The `wrapper` function encapsulates all of the throttling / debouncing
+  // functionality and when executed will limit the rate at which `callback`
+  // is executed.
+  function wrapper() {
+    var that = this,
+      elapsed = +new Date() - last_exec,
+      args = arguments;
+    
+    // Execute `callback` and update the `last_exec` timestamp.
+    function exec() {
+      last_exec = +new Date();
+      callback.apply( that, args );
+    };
+    
+    // If `debounce_mode` is true (at_begin) this is used to clear the flag
+    // to allow future `callback` executions.
+    function clear() {
+      timeout_id = undefined;
+    };
+    
+    if ( debounce_mode && !timeout_id ) {
+      // Since `wrapper` is being called for the first time and
+      // `debounce_mode` is true (at_begin), execute `callback`.
+      exec();
+    }
+    
+    // Clear any existing timeout.
+    timeout_id && clearTimeout( timeout_id );
+    
+    if ( debounce_mode === undefined && elapsed > delay ) {
+      // In throttle mode, if `delay` time has been exceeded, execute
+      // `callback`.
+      exec();
+      
+    } else if ( no_trailing !== true ) {
+      // In trailing throttle mode, since `delay` time has not been
+      // exceeded, schedule `callback` to execute `delay` ms after most
+      // recent execution.
+      // 
+      // If `debounce_mode` is true (at_begin), schedule `clear` to execute
+      // after `delay` ms.
+      // 
+      // If `debounce_mode` is false (at end), schedule `callback` to
+      // execute after `delay` ms.
+      timeout_id = setTimeout( debounce_mode ? clear : exec, debounce_mode === undefined ? delay - elapsed : delay );
+    }
+  };
+  
+  // Set the guid of `wrapper` function to the same of original callback, so
+  // it can be removed in jQuery 1.4+ .unbind or .die by using the original
+  // callback as a reference.
+  if ( $.guid ) {
+    wrapper.guid = callback.guid = callback.guid || $.guid++;
+  }
+  
+  // Return the wrapper function.
+  return wrapper;
+};
+
 $(document).ready(() => {
   let geojson;
   let interactions = [];
   debugger;
   const mapTag = $('script[src*="map.js"]');
-  const apiEndpoint = mapTag.data('endpoint') || 'https://localhost:5001/api/map';
+  const apiEndpoint = mapTag.data('endpoint');
   const mapRootClass = mapTag.data('map-block-class') || 'map';
   const mapEmbedEl = $('#mapEmbed');
 
   const interactionPanelMarkup = '<div class="interaction-panel"></div>';
-  const interactionPanelChildrenMarkup = ['<h2 class="interaction-panel__title"></h2>', '<div class="interaction-panel__tweet-list"></div>', '<p class="interaction-panel__no-data">We don\'t have any tweets from this area yet.</p>'];
+  const interactionPanelChildrenMarkup = ['<h2 class="interaction-panel__title"></h2>', '<div class="interaction-panel__search"><label><span class="label-text">Search for a twitter handle or tweet text</span><input class="js-interaction-panel-search" type="text" val="" /></label><button class="interaction-panel__search-clear js-interaction-panel-clear-search">Clear search</button><span class="interaction-panel__search-info js-search-info-results"></span></div>', '<div class="interaction-panel__tweet-list"></div>', '<p class="interaction-panel__no-data">We don\'t have any tweets from this area yet.</p>'];
   const rootContainerHtml = '<div class="' + mapRootClass + '__container"><div class="' + mapRootClass + '__map-container"></div>' + interactionPanelMarkup + '</div>';
 
   const interactionPanelCardInfoMarkup = '<div class="tweet-card__info"><p class="tweet-card__name"></p><p class="tweet-card__date"></p><p class="tweet-card__text"></p></div>';
@@ -25638,12 +25713,14 @@ $(document).ready(() => {
     geojson.resetStyle(e.target);
   }
 
+  var currentTweetList = null;
   function showInteractions(e) {
     const area = cleanName(e.target.feature.properties.label_en);
     const newInteractions = interactions.filter(newInteraction => {
       return area === cleanName(newInteraction.area)
     });
 
+    currentTweetList = newInteractions;
     for (var markup of interactionPanelChildrenMarkup) {
       $(markup).appendTo($interactionPanel);
     }
@@ -25655,20 +25732,19 @@ $(document).ready(() => {
     }else {
       $('.interaction-panel__title').remove();
       $('.interaction-panel__tweet-list').remove();
+      $('.interaction-panel__search').remove();
     }
 
     for (const interaction of newInteractions) {
       const tweetCard = $(interactionPanelCardMarkup);
       $('img', tweetCard)
         .attr('src', interaction.img);
-      console.log(interaction);
       $('.' + tweetCardClasses.TweetName, tweetCard).text(interaction.twitterHandle || '');
       $('.' + tweetCardClasses.TweetText, tweetCard).text(interaction.text || 'text text text');
       $('.' + tweetCardClasses.TweetDate, tweetCard).text(interaction.createdDateDisplay || '');
       $('.' + tweetCardClasses.TweetLink, tweetCard).attr('href', interaction.tweetUrl || '');
 
       tweetCard.appendTo($tweetList);
-      console.log(tweetCard);
     }
 
     if (!$('.interactions-panel-close', '.map__interactions-panel').length) {
@@ -25679,11 +25755,43 @@ $(document).ready(() => {
         .appendTo($interactionPanel);
     }
 
+    $('.interaction-panel__search').on('keyup change', $.throttle(300, function(e){
+      // var searchRegex = new RegExp($('.js-interaction-panel-search').val(), 'gi');
+      var normalizedSearch = $('.js-interaction-panel-search').val().toLowerCase();
+      var results = currentTweetList.filter(function(tweet){
+        // return searchRegex.test(tweet.twitterHandle) || searchRegex.test(tweet.text);
+        return tweet.twitterHandle.toLowerCase().includes(normalizedSearch) || tweet.text.toLowerCase().includes(normalizedSearch);
+      });
+
+      $('.interaction-panel__tweet-list').empty();
+
+      for (const interaction of results) {
+        const tweetCard = $(interactionPanelCardMarkup);
+        $('img', tweetCard)
+          .attr('src', interaction.img);
+        $('.' + tweetCardClasses.TweetName, tweetCard).text(interaction.twitterHandle || '');
+        $('.' + tweetCardClasses.TweetText, tweetCard).text(interaction.text || 'text text text');
+        $('.' + tweetCardClasses.TweetDate, tweetCard).text(interaction.createdDateDisplay || '');
+        $('.' + tweetCardClasses.TweetLink, tweetCard).attr('href', interaction.tweetUrl || '');
+  
+        tweetCard.appendTo($tweetList);
+      }
+      
+      var resultsText = results.length + (results.length > 1 || results.length !== 0? ' results': ' result') + ' found';
+      $('.js-search-info-results').text(resultsText);
+    }));
+
+    $('.js-interaction-panel-clear-search').on('click', function(){
+      $('.js-interaction-panel-search').val('');
+      $('.js-interaction-panel-search').trigger('keyup');
+    });
+
     $interactionPanel.toggleClass('is-active');
   }
 
   function resetInteractionPanel() {
     $interactionPanel.empty();
+    currentTweetList = null;
   }
 
   function cleanName(name) {

@@ -1,7 +1,7 @@
 @import url("../node_modules/leaflet/dist/leaflet.css");
 
 $tablet-breakpoint-size: 768px; //tablet
-$desktop-breakpoint-size: 1200px; //wide desktop
+$desktop-breakpoint-size: 1921px; //wide desktop
 
 html, body {
   padding: 0;
@@ -25,6 +25,7 @@ html, body {
     left: 0;
     background: #EDEDED;
     flex-wrap: wrap;
+    align-content: flex-start;
     font-family: 'Varela Round', sans-serif;
 
     &.is-active {
@@ -38,6 +39,46 @@ html, body {
       color: #254684;
     }
 
+    &__search {
+      text-align: center;
+      width: 100%;
+      margin: 0em 0 0.83em 0;
+
+      .label-text {
+        display: block;
+        color: #254684;
+        font-size: 16px;
+        line-height: 1.5;
+      }
+
+      input {
+        width: 80%;
+        padding: 10px 2%;
+        border-radius: 30px;
+        border: none;
+        padding: 0.5em;
+        font-size: 16px;
+        line-height: 1.5;
+
+        @media (min-width:$tablet-breakpoint-size){
+          width: 50%;
+        }
+      }
+    }
+
+    &__search-info {
+      display: block;
+      margin: 0.25em 0 0; 
+      line-height: 1.5;
+      color: #254684;
+    }
+
+    &__search-clear {
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
     &__tweet-list {
       max-width: 87.5%;
       margin: 0 auto;
@@ -46,6 +87,7 @@ html, body {
 
       @media (min-width:$tablet-breakpoint-size){
         display:flex;
+        max-width: none;
         flex-wrap: wrap;
         justify-content: space-evenly;
       }
