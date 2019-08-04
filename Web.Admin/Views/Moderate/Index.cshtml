@@ -3,6 +3,11 @@
     ViewData["Title"] = "Moderate";
 }
 <h1>Moderate</h1>
+<div style="float: right;">
+    <button class="btn btn-primary" type="button" onclick="ShowNew()">
+        Add Tweet Manually
+    </button>
+</div>
 <span id="LastRefresh"></span>
 
 <style>
@@ -55,6 +60,8 @@
             <ul>
                 <li>Click on image to edit</li>
                 <li>Tweets that are hidden form the map will appear faded</li>
+                <li>Changing the "Area" for a Tweet will also change the Geo coordinates</li>
+                <li>You can also set the Geo coords yourself (Search the location and then copy and paste the "Lat,Long" from <a href="https://www.gps-coordinates.net/" target="_blank">here</a>)</li>
             </ul>
         </div>
     </div>
@@ -77,12 +84,36 @@
                     </div>
                     <div class="form-group">
                         <label for="Area">Area</label>
-                        <input id="Area" type="text" class="form-control" />
+                        <select id="Area" class="form-control" onchange="SetGeo(this)" required>
+                            <option geo="0,0"></option>
+                            <option geo="57.5066357,-5.0038367">Highland</option>
+                            <option geo="58.1222438,-6.6471177">Na h-Eileanan Siar</option>
+                            <option geo="58.9418231,-3.1296944">Orkney Islands</option>
+                            <option geo="57.166667,-2.666667">Aberdeenshire</option>
+                            <option geo="57.1557905,-2.146624">Aberdeen City</option>
+                            <option geo="56.5,-3.75">Perth and Kinross</option>
+                            <option geo="56.1181242,-3.9360012">Stirling</option>
+                            <option geo="56.3333331,-3.0000001">Fife</option>
+                            <option geo="55.8555116,-4.2262307">Glasgow City</option>
+                            <option geo="55.9117426,-3.277097">City of Edinburgh</option>
+                            <option geo="55.583333,-2.833333">Scottish Borders</option>
+                            <option geo="55.299818,-4.6459884">South Ayrshire</option>
+                            <option geo="55.083333,-3.833333">Dumfries and Galloway</option>
+                        </select>
                     </div>
                     <hr />
                     <div class="form-group">
+                        <label for="TweetUrl">TweetUrl</label>
+                        <input id="TweetUrl" type="text" class="form-control" disabled required />
+                    </div>
+                    <div class="form-group">
                         <label for="Geo">Geo</label>
-                        <input id="Geo" type="text" class="form-control" disabled />
+                        <input id="Geo" type="text" class="form-control" required />
+                    </div>
+                    <hr />
+                    <div class="form-group">
+                        <label for="Img">Img</label>
+                        <input id="Img" type="text" class="form-control" disabled />
                     </div>
                     <div class="form-group">
                         <label for="TweetId">TweetId</label>
@@ -93,10 +124,6 @@
                         <input id="Id" type="text" class="form-control" disabled />
                     </div>
 
-                    <div class="form-group">
-                        <label for="Img">Img</label>
-                        <input id="Img" type="text" class="form-control" disabled />
-                    </div>
 
                     <div class="form-group">
                         <label for="Text">Text</label>
@@ -111,10 +138,6 @@
                     <div class="form-group">
                         <label for="TwitterHandle">TwitterHandle</label>
                         <input id="TwitterHandle" type="text" class="form-control" disabled />
-                    </div>
-                    <div class="form-group">
-                        <label for="TweetUrl">TweetUrl</label>
-                        <input id="TweetUrl" type="text" class="form-control" disabled />
                     </div>
                     <div class="form-group">
                         <label for="LocationConfidence">LocationConfidence</label>
@@ -132,20 +155,39 @@
 </div><!-- /.modal -->
 @section Scripts {
 
-<script src="~/lib/mustache/mustache.min.js"></script>
-<script id="previewTemplate" type="x-tmpl-mustache">
-    <div>
-        <img data-editclick="true" class="hide_{{ hide }}" id="{{ id }}" src="{{ img }}">
-        <span class="created">{{ createdDateDisplay }}</span>
-    </div>
-</script>
+    <script src="~/lib/mustache/mustache.min.js"></script>
+    <script id="previewTemplate" type="x-tmpl-mustache">
+        <div>
+            <img data-editclick="true" class="hide_{{ hide }}" id="{{ id }}" src="{{ img }}">
+            <span class="created">{{ createdDateDisplay }}</span>
+        </div>
+    </script>
 
-<script>
+    <script>
     $(function () {
         UpdateImages();
         var timerId = setInterval(UpdateImages, 30 * 1000); //load new tweets every x seconds
     });
 
+    function ShowNew() {
+        $("#editLoader").hide();
+        $("#editForm").show();
+
+        $('#editModal').modal('show');
+        $('#TweetId').val('');
+        $('#Id').val('');
+        $('#Img').val('');
+        $('#CreatedDate').val('');
+        $('#TwitterHandle').val('');
+        $('#TweetUrl').val('');
+        $('#TweetUrl').attr("disabled",false);
+        $('#Text').val('');
+        $('#LocationConfidence').val('');
+        $('#Geo').val('');
+        $('#Area').val('');
+        $('#Hide').prop('checked', false);
+
+    }
     function ShowEdit(id) {
         $("#editLoader").hide();
         $("#editForm").show();
@@ -157,6 +199,7 @@
             $('#CreatedDate').val(data.createdDate);
             $('#TwitterHandle').val(data.twitterHandle);
             $('#TweetUrl').val(data.tweetUrl);
+            $('#TweetUrl').attr("disabled",true);
             $('#Text').val(data.text);
             $('#LocationConfidence').val(data.locationConfidence);
             $('#Geo').val(data.geo);
@@ -166,8 +209,60 @@
     }
 
     $('#SaveChanges').click(function () {
-        $("#editLoader").show();
-        $("#editForm").hide();
+        var valid = true;
+        $('[required]').each(function(i,e) {
+            if (!$(e).val())
+                valid = false;
+        });
+
+        if (valid) {
+            $("#editLoader").show();
+            $("#editForm").hide();
+
+            if ($('#Id').val()) {
+                SaveEdits();
+            } else {
+                SaveNew();
+            }
+        }
+    });
+
+    function SaveNew() {
+
+        var newPoint =
+        {
+            "TweetUrl": $('#TweetUrl').val(),
+            "area": $('#Area').val(),
+            "hide": $('#Hide').is(":checked"),
+
+            "Id": "0",
+            "TweetId": "",
+            "CreatedDate": new Date().toISOString(),
+            "img": "",
+            "LocationConfidence": "",
+            "text": "",
+            "twitterhandle": "",
+            "geo": "",
+        }
+        $.ajax({
+            url: "/api/map",
+            type: "POST",
+            headers: {
+                "Authorization": "@Model.ApiKey"
+            },
+            data: JSON.stringify(newPoint),
+            contentType: "application/json"
+        }).done(function () {
+            $('#editModal').modal('hide');
+            $('#' + newPoint.id).removeClass().addClass('hide_' + newPoint.hide);
+        })
+        .fail(function () {
+            alert("There has been an error. Unable to save new Tweet.");
+        })
+    }
+
+    function SaveEdits() {
+
         var newPoint =
         {
             "Id": $('#Id').val(),
@@ -194,10 +289,10 @@
             $('#editModal').modal('hide');
             $('#' + newPoint.id).removeClass().addClass('hide_' + newPoint.hide);
         })
-            .fail(function () {
+        .fail(function () {
                 alert("There has been an error. Unable to save updates.");
-            })
-    });
+        })
+    }
 
     function UpdateImages() {
         $.get("/api/map?getall=true", function (data) {
@@ -217,5 +312,9 @@
             $("#LastRefresh").html("ERROR.  Please refresh page");
         });
     }
-</script>
+
+    function SetGeo(select) {
+        $('#Geo').val($('option:selected', $(select)).attr("geo"));
+    }
+    </script>
 }

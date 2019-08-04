@@ -4,9 +4,9 @@ Wants=PurpleFridayWebApp.service
 After=PurpleFridayWebApp.service
 
 [Service]
-User=root
+User=purple-friday
 Type=simple
-ExecStart=/usr/local/bin/PurpleFridayTweetListener/PurpleFridayTweetListener
+ExecStart=/opt/PurpleFridayTweetListener/PurpleFridayTweetListener
 Restart=always
 RestartSec=30
 
