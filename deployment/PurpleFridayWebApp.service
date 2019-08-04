@@ -4,9 +4,9 @@ Wants=network.service
 After=network.service
 
 [Service]
-User=root
+User=purple-friday
 Type=simple
-ExecStart=/usr/local/bin/PurpleFridayWebApp/Web.Admin
+ExecStart=/opt/PurpleFridayWebApp/Web.Admin
 Restart=always
 RestartSec=30
 
