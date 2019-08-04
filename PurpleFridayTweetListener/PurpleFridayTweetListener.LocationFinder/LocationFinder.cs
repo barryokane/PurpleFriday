@@ -26,6 +26,10 @@ namespace PurpleFridayTweetListener.LocationFinder
         {
             try
             {
+                if (!locationText.EndsWith(",scotland", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    locationText = locationText + ",scotland"; //hack to restrict returned locations to scotland
+                }
                 IEnumerable<BingAddress> addresses = await _geoCoder.GeocodeAsync(locationText) as IEnumerable<BingAddress>;
 
                 if(addresses == null || !addresses.Any())
@@ -59,7 +63,11 @@ namespace PurpleFridayTweetListener.LocationFinder
             catch (Exception e)
             {
                 Console.WriteLine($"Exception caught in GetLocationFromStringAsync method, message: {e.Message}");
-                Console.WriteLine(JsonConvert.SerializeObject(e));
+                Console.WriteLine(JsonConvert.SerializeObject(e, Formatting.Indented,
+                    new JsonSerializerSettings()
+                    {
+                        ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                    }));
                 return null;
             }
 
@@ -77,7 +85,6 @@ namespace PurpleFridayTweetListener.LocationFinder
             mapping["East Ayrshire"] = new string[] { };
             mapping["East Lothian"] = new string[] { };
             mapping["East Renfrewshire"] = new string[] { };
-            mapping["Na h-Eileanan Siar"] = new string[] { };
             mapping["Falkirk"] = new string[] { };
             mapping["Highland"] = new string[] { };
             mapping["Inverclyde"] = new string[] { };
