@@ -38,7 +38,7 @@ namespace PurpleFridayTweetListener.Communicator
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
                 var tweetResponse = JsonConvert.DeserializeObject<TweetResponse>(jsonString);
-                return tweetResponse.ReplyTweetText;
+                return (tweetResponse.SendReplyTweet) ? tweetResponse.ReplyTweetText : null;
             }
 
             return null;
