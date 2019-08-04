@@ -49,6 +49,7 @@ namespace Web.Admin.Controllers
                 ApiKey = _configuration.GetValue<string>("IncomingMapAPIKey"),
                 TweetResponse = tweetResponse
             };
+            ViewData["message"] = "Settings saved";
             return View(model);
         }
 
