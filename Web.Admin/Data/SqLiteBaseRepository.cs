@@ -15,6 +15,10 @@ namespace Web.Admin.Data
 
         public SqLiteBaseRepository(string dataFolderPath)
         {
+            if (!System.IO.Directory.Exists(dataFolderPath))
+            {
+                Directory.CreateDirectory(dataFolderPath);
+            }
             DbFile = Path.Combine(dataFolderPath, "SimpleDb.sqlite");
             if (!File.Exists(DbFile))
             {
