@@ -205,7 +205,7 @@ $(document).ready(() => {
 
     for (const interaction of newInteractions) {
       const tweetCard = $(interactionPanelCardMarkup);
-      $('img', '.' + tweetCardClasses.TweetImage, tweetCard)
+      $('img', tweetCard)
         .attr('src', interaction.img);
       console.log(interaction);
       $('.' + tweetCardClasses.TweetName, tweetCard).text(interaction.twitterHandle || '');

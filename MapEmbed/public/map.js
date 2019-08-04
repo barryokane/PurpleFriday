@@ -25530,7 +25530,7 @@ $(document).ready(() => {
   const rootContainerHtml = '<div class="' + mapRootClass + '__container"><div class="' + mapRootClass + '__map-container"></div>' + interactionPanelMarkup + '</div>';
 
   const interactionPanelCardInfoMarkup = '<div class="tweet-card__info"><p class="tweet-card__name"></p><p class="tweet-card__date"></p><p class="tweet-card__text"></p></div>';
-  const interactionPanelCardMarkup = '<div class="tweet-card"><div class="tweet-card__image"><img /></div>' + interactionPanelCardInfoMarkup + '<a href="" target="_blank" class="tweet-card__link">View tweet></a></div>';
+  const interactionPanelCardMarkup = '<div class="tweet-card"><div class="tweet-card__image"><img /></div>' + interactionPanelCardInfoMarkup + '<a href="" target="_blank" class="tweet-card__link">View tweet</a></div>';
   const tweetCardClasses = {
     TweetName: 'tweet-card__name',
     TweetImage: 'tweet-card__image',
@@ -25659,7 +25659,7 @@ $(document).ready(() => {
 
     for (const interaction of newInteractions) {
       const tweetCard = $(interactionPanelCardMarkup);
-      $('img', '.' + tweetCardClasses.TweetImage, tweetCard)
+      $('img', tweetCard)
         .attr('src', interaction.img);
       console.log(interaction);
       $('.' + tweetCardClasses.TweetName, tweetCard).text(interaction.twitterHandle || '');
