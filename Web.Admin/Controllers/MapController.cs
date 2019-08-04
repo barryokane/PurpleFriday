@@ -42,10 +42,6 @@ namespace Web.Admin.Controllers
         public JsonResult Get(bool? getall)
         {
             List<MapPoint> mapData = db.GetAll(getall.HasValue && getall.Value);
-            for (var i = 0; i < 10; i++)
-            {
-                mapData.Add(mapData[0]);
-            }
             return Json(mapData);
         }
         [HttpGet("{id}")]
