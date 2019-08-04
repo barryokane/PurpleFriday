@@ -234,6 +234,7 @@
             "TweetUrl": $('#TweetUrl').val(),
             "area": $('#Area').val(),
             "hide": $('#Hide').is(":checked"),
+            "geo": $('#Geo').val().split(","),
 
             "Id": "0",
             "TweetId": "",
@@ -242,7 +243,6 @@
             "LocationConfidence": "",
             "text": "",
             "twitterhandle": "",
-            "geo": "",
         }
         $.ajax({
             url: "/api/map",
