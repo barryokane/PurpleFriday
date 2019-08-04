@@ -1,15 +1,140 @@
 @import url("../node_modules/leaflet/dist/leaflet.css");
 
+$tablet-breakpoint-size: 768px; //tablet
+$desktop-breakpoint-size: 1200px; //wide desktop
+
 html, body {
   padding: 0;
   margin: 0;
 }
 
-.interaction-panel {
-  box-sizing: border-box;
-  position: absolute;
-  z-index: 1000;
-  overflow: auto;
+.map__container {
+    position: relative;
+
+  .interaction-panel {
+    display: none;
+    position: absolute;
+    z-index: 10000;
+    max-width: 100%;
+    padding: 1em 0 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: #EDEDED;
+    flex-wrap: wrap;
+    font-family: 'Varela Round', sans-serif;
+
+    &.is-active {
+      display: flex;
+    }
+
+    &__title {
+      width: 100%;
+      margin: 1.5em 0 0.83em 0;
+      text-align: center;
+      color: #254684;
+    }
+
+    &__tweet-list {
+      max-width: 87.5%;
+      margin: 0 auto;
+      padding: 0 6.75%;
+      color: #254684;
+
+      @media (min-width:$tablet-breakpoint-size){
+        display:flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+      }
+      
+    }
+
+    &__close {
+      position: absolute;
+      top: 1em;
+      right: 1em;
+      font-size: 1.5em;
+      z-index: 1001;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    &__no-data {
+      margin: 0 auto;
+      color: #254684;
+    }
+  }
+
+  .tweet-card {
+    width: 100%;
+    margin: 0 0 2.5em 0;
+    padding: 0 0 1.5em;
+    box-shadow: 1px 1px 3px 1px #ccc;
+    text-align: center;
+    background: #fff;
+
+    @media (min-width:$tablet-breakpoint-size){
+      width: 48%;
+    }
+
+    @media (min-width:$desktop-breakpoint-size){
+      width: 30%;
+    }
+
+    &__image > img {
+      width: 100%;
+      margin: 0 0 1.5625em 0;
+      
+    }
+
+    &__info {
+      display: flex;
+      padding: 0.5em;
+      flex-wrap: wrap;
+      text-align: left;
+    }
+
+    &__name,
+    &__date {
+      color: #00b7ef;
+      margin: 0 0 1em 0;
+      flex: 1 1 auto;
+    }
+
+    &__date {
+      text-align: right;
+    }
+
+    &__text {
+      margin: 0 0 0.5em 0;
+      font-size: 1.5em;
+      flex: 0 1 100%;
+    }
+
+    &__link {
+      background: #254684;
+      text-transform: uppercase;
+      color: white;
+      border-radius: 30px;
+      padding: 1em 1.35em .85em;
+      display: inline-block;
+      -webkit-appearance: none;
+      border: 1px solid #254684;
+      text-decoration: none;
+
+      background: #ED008D;
+      border-color: #ED008D;
+
+      &:hover {
+        background: #ba006f;
+        border-color: #ba006f;
+      }
+    }
+  }
 }
 
 .interactions-panel-close {
@@ -17,4 +142,8 @@ html, body {
   font-size: 20px;
   cursor: pointer;
   z-index: 1001;
+}
+
+.interaction-image {
+  width: 20%;
 }

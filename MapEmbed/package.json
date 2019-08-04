@@ -12,6 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "bricks.js": "^1.8.0",
+    "isotope-layout": "^3.0.6",
+    "jquery-bridget": "^2.0.1",
     "leaflet": "^1.5.1",
     "masonry-layout": "^4.2.2"
   },
