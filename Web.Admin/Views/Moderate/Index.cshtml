@@ -3,6 +3,11 @@
     ViewData["Title"] = "Moderate";
 }
 <h1>Moderate</h1>
+<div style="float: right;">
+    <button class="btn btn-primary" type="button" onclick="ShowNew()">
+        Add Tweet Manually
+    </button>
+</div>
 <span id="LastRefresh"></span>
 
 <style>
@@ -77,9 +82,18 @@
                     </div>
                     <div class="form-group">
                         <label for="Area">Area</label>
-                        <input id="Area" type="text" class="form-control" />
+                        <input id="Area" type="text" class="form-control" required />
                     </div>
                     <hr />
+                    <div class="form-group">
+                        <label for="TweetUrl">TweetUrl</label>
+                        <input id="TweetUrl" type="text" class="form-control" disabled required />
+                    </div>
+                    <hr />
+                    <div class="form-group">
+                        <label for="Img">Img</label>
+                        <input id="Img" type="text" class="form-control" disabled />
+                    </div>
                     <div class="form-group">
                         <label for="Geo">Geo</label>
                         <input id="Geo" type="text" class="form-control" disabled />
@@ -93,10 +107,6 @@
                         <input id="Id" type="text" class="form-control" disabled />
                     </div>
 
-                    <div class="form-group">
-                        <label for="Img">Img</label>
-                        <input id="Img" type="text" class="form-control" disabled />
-                    </div>
 
                     <div class="form-group">
                         <label for="Text">Text</label>
@@ -111,10 +121,6 @@
                     <div class="form-group">
                         <label for="TwitterHandle">TwitterHandle</label>
                         <input id="TwitterHandle" type="text" class="form-control" disabled />
-                    </div>
-                    <div class="form-group">
-                        <label for="TweetUrl">TweetUrl</label>
-                        <input id="TweetUrl" type="text" class="form-control" disabled />
                     </div>
                     <div class="form-group">
                         <label for="LocationConfidence">LocationConfidence</label>
@@ -132,20 +138,39 @@
 </div><!-- /.modal -->
 @section Scripts {
 
-<script src="~/lib/mustache/mustache.min.js"></script>
-<script id="previewTemplate" type="x-tmpl-mustache">
-    <div>
-        <img data-editclick="true" class="hide_{{ hide }}" id="{{ id }}" src="{{ img }}">
-        <span class="created">{{ createdDateDisplay }}</span>
-    </div>
-</script>
+    <script src="~/lib/mustache/mustache.min.js"></script>
+    <script id="previewTemplate" type="x-tmpl-mustache">
+        <div>
+            <img data-editclick="true" class="hide_{{ hide }}" id="{{ id }}" src="{{ img }}">
+            <span class="created">{{ createdDateDisplay }}</span>
+        </div>
+    </script>
 
-<script>
+    <script>
     $(function () {
         UpdateImages();
         var timerId = setInterval(UpdateImages, 30 * 1000); //load new tweets every x seconds
     });
 
+    function ShowNew() {
+        $("#editLoader").hide();
+        $("#editForm").show();
+
+        $('#editModal').modal('show');
+        $('#TweetId').val('');
+        $('#Id').val('');
+        $('#Img').val('');
+        $('#CreatedDate').val('');
+        $('#TwitterHandle').val('');
+        $('#TweetUrl').val('');
+        $('#TweetUrl').attr("disabled",false);
+        $('#Text').val('');
+        $('#LocationConfidence').val();
+        $('#Geo').val();
+        $('#Area').val();
+        $('#Hide').prop('checked', false);
+
+    }
     function ShowEdit(id) {
         $("#editLoader").hide();
         $("#editForm").show();
@@ -157,6 +182,7 @@
             $('#CreatedDate').val(data.createdDate);
             $('#TwitterHandle').val(data.twitterHandle);
             $('#TweetUrl').val(data.tweetUrl);
+            $('#TweetUrl').attr("disabled",true);
             $('#Text').val(data.text);
             $('#LocationConfidence').val(data.locationConfidence);
             $('#Geo').val(data.geo);
@@ -166,8 +192,60 @@
     }
 
     $('#SaveChanges').click(function () {
-        $("#editLoader").show();
-        $("#editForm").hide();
+        var valid = true;
+        $('[required]').each(function(i,e) {
+            if (!$(e).val())
+                valid = false;
+        });
+
+        if (valid) {
+            $("#editLoader").show();
+            $("#editForm").hide();
+
+            if ($('#Id').val()) {
+                SaveEdits();
+            } else {
+                SaveNew();
+            }
+        }
+    });
+
+    function SaveNew() {
+
+        var newPoint =
+        {
+            "TweetUrl": $('#TweetUrl').val(),
+            "area": $('#Area').val(),
+            "hide": $('#Hide').is(":checked"),
+
+            "Id": "0",
+            "TweetId": "",
+            "CreatedDate": new Date().toISOString(),
+            "img": "",
+            "LocationConfidence": "",
+            "text": "",
+            "twitterhandle": "",
+            "geo": "",
+        }
+        $.ajax({
+            url: "/api/map",
+            type: "POST",
+            headers: {
+                "Authorization": "@Model.ApiKey"
+            },
+            data: JSON.stringify(newPoint),
+            contentType: "application/json"
+        }).done(function () {
+            $('#editModal').modal('hide');
+            $('#' + newPoint.id).removeClass().addClass('hide_' + newPoint.hide);
+        })
+        .fail(function () {
+            alert("There has been an error. Unable to save new Tweet.");
+        })
+    }
+
+    function SaveEdits() {
+
         var newPoint =
         {
             "Id": $('#Id').val(),
@@ -194,10 +272,10 @@
             $('#editModal').modal('hide');
             $('#' + newPoint.id).removeClass().addClass('hide_' + newPoint.hide);
         })
-            .fail(function () {
+        .fail(function () {
                 alert("There has been an error. Unable to save updates.");
-            })
-    });
+        })
+    }
 
     function UpdateImages() {
         $.get("/api/map?getall=true", function (data) {
@@ -217,5 +295,5 @@
             $("#LastRefresh").html("ERROR.  Please refresh page");
         });
     }
-</script>
+    </script>
 }

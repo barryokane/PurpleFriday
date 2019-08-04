@@ -67,8 +67,8 @@ namespace Web.Admin.Data
                         mapPoint.TwitterHandle,
                         mapPoint.LocationConfidence,
                         mapPoint.CreatedDate,
-                        Geo_x = mapPoint.Geo[0],
-                        Geo_y = mapPoint.Geo[1],
+                        Geo_x = (mapPoint.Geo != null) ? mapPoint.Geo[0] : 0,
+                        Geo_y = (mapPoint.Geo != null) ? mapPoint.Geo[1] : 0,
                         mapPoint.Area,
                         mapPoint.Hide
                     }).First();

@@ -11,6 +11,7 @@ using Web.Admin.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Web.Admin.Data;
+using Tweetinvi;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -59,9 +60,44 @@ namespace Web.Admin.Controllers
             {
                 return;
             }
-
             //todo: validation?
-            db.AddNew(value);
+
+            if (value.Id > 0)
+            {
+                db.AddNew(value);
+            } else
+            {
+                //get the details from TweetURL and save new one
+
+                Auth.SetUserCredentials(_configuration.GetValue<string>("TwitterCredentials:ConsumerKey"),
+                    _configuration.GetValue<string>("TwitterCredentials:ConsumerSecret"),
+                    _configuration.GetValue<string>("TwitterCredentials:UserAccessToken"),
+                    _configuration.GetValue<string>("TwitterCredentials:UserAccessSecret"));
+
+                var tweet = Tweet.GetTweet(1135926878202748930);
+                if (tweet != null)
+                {
+                    MapPoint newTweet = new MapPoint
+                    {
+                        Hide = value.Hide,
+                        TweetUrl = tweet.Url,
+                        TweetId = tweet.IdStr,
+                        Text = tweet.Text,
+                        Area = value.Area,
+                        TwitterHandle = tweet.CreatedBy.ScreenName,
+                        CreatedDate = tweet.CreatedAt,
+                        LocationConfidence = "High",
+                        Img = tweet.Media.First(x => x.MediaType != "video").MediaURLHttps,
+
+                    };
+                    db.AddNew(newTweet);
+                }
+                else
+                {
+                    throw new ApplicationException("Unable to find tweet!");
+                }
+            }
+
         }
 
         // PUT api/values/5
