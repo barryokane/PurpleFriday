@@ -7,8 +7,6 @@ namespace PurpleFridayTweetListener
     public class TweetListenerConfig
     {
         public string Filter { get; set; }
-        public bool SendReply { get; set; }
-        public string ReplyText { get; set; }
         public bool ImageRequired { get; set; }
 
     }

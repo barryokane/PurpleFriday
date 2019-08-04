@@ -1,0 +1,28 @@
+﻿@model SettingsPageModel
+@{
+    ViewData["Title"] = "Settings";
+}
+
+<h1>Settings</h1>
+
+<form method="post">
+
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" name="SendReplyTweet" id="ReplyTweetText" value="true" checked="@Model.TweetResponse.SendReplyTweet" /> Send Tweet Replies
+        </label>
+    </div>
+
+
+    <div class="form-group">
+        <label for="ReplyTweetText">Tweet Response Text</label>
+        <textarea class="form-control" rows="3" name="ReplyTweetText" id="ReplyTweetText">@Model.TweetResponse.ReplyTweetText</textarea>
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-default">Save</button>
+        </div>
+    </div>
+</form>
