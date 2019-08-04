@@ -9,7 +9,9 @@ RUN dotnet restore
 # copy everything else and build app
 WORKDIR /app
 COPY . ./
-RUN dotnet publish -c Release -o out
+COPY _datastore ./
+#RUN dotnet publish -c Release -o out
+RUN dotnet publish -c Debug -o out
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2
 WORKDIR /app

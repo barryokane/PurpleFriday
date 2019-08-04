@@ -4,18 +4,22 @@ services:
     purplefridaytweetlistener:
         image: purplefridaytweetlistener:latest
         ports:
-            - "44398:80"
+            - "44398:44398"
         volumes:
             - type: bind
-              source: /Users/stevelloyd/logs
+              source: ${HOME}/logs
               target: /app/logs
 
     web_admin:
         image: purplefriday_wa:latest
         ports: 
-            - "8080:80"
+            - "80:80"
+        volumes:
+            - type: bind
+              source: ${HOME}/_datastore
+              target: /app/_datastore
 
 networks:
     default:
-        external: false
+        external: true
         name: nat
