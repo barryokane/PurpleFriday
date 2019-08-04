@@ -21,19 +21,19 @@ namespace Web.Admin.Controllers
     [ApiController]
     public class MapController : Controller
     {
-        private readonly IHostingEnvironment host;
         private readonly IConfiguration _configuration;
         private readonly string API_KEY;
+        private readonly TweetResponse Settings;
         private readonly IMapPointRepository db;
 
         public MapController(IHostingEnvironment host, IConfiguration configuration) {
-            this.host = host;
 
             _configuration = configuration;
 
             API_KEY = _configuration.GetValue<string>("IncomingMapAPIKey");
 
             var dataFolderPath = host.ContentRootPath + @"/_datastore/";
+            Settings = SettingsRepository.GetSettings(dataFolderPath);
             db = new SqLiteMapPointRepository(dataFolderPath);
         }
 
@@ -53,12 +53,17 @@ namespace Web.Admin.Controllers
 
 
         // POST api/values
+        /// <summary>
+        /// Save new Tweet to be shown on map
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>JSON that includes if reply tweet should be sent and if so what the text should be</returns>
         [HttpPost]
-        public void Post([FromBody]MapPoint value)
+        public JsonResult Post([FromBody]MapPoint value)
         {
             if (!AuthHeaderIsValid())
             {
-                return;
+                return Json(new object[] { "Access denied" });
             }
             //todo: validation?
 
@@ -106,6 +111,7 @@ namespace Web.Admin.Controllers
                 throw new ApplicationException("Unable to add tweet!");
             }
 
+            return Json(Settings);
         }
 
         // PUT api/values/5
