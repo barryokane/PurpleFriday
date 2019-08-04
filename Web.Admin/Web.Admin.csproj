@@ -23,5 +23,6 @@
     <Folder Include="Views\Moderate\" />
     <Folder Include="Data\" />
     <Folder Include="Data\Models\" />
+    <Folder Include="_datastore\" />
   </ItemGroup>
 </Project>
