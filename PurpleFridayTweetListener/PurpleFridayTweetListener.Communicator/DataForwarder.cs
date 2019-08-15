@@ -37,8 +37,12 @@ namespace PurpleFridayTweetListener.Communicator
             if (response != null)
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
-                var tweetResponse = JsonConvert.DeserializeObject<TweetResponse>(jsonString);
-                return (tweetResponse.SendReplyTweet) ? tweetResponse.ReplyTweetText : null;
+                try {
+                    var tweetResponse = JsonConvert.DeserializeObject<TweetResponse>(jsonString);
+                    return (tweetResponse.SendReplyTweet) ? tweetResponse.ReplyTweetText : null;
+                } catch (Exception e) {
+                    throw new Exception("Invalid repsonse from Map API: "+jsonString, e);
+                }
             }
 
             return null;
