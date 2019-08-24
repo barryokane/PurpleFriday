@@ -16,4 +16,9 @@
     <ProjectReference Include="..\PurpleFridayTweetListener.LocationFinder\PurpleFridayTweetListener.LocationFinder.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="not_null_locations.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+
 </Project>

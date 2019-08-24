@@ -11,7 +11,8 @@ namespace PurpleFridayTweetListener.LocationFinder
     public class Tests
     {
         IGeocoder geocoder;
-        private string MAPS_KEY = "your-key-here";
+        private string MAPS_KEY = "your map api key here";
+        private static string NOT_NULL_FILENAME = "not_null_locations.txt";
 
         [SetUp]
         public void Setup()
@@ -89,7 +90,34 @@ namespace PurpleFridayTweetListener.LocationFinder
             Assert.NotNull(coords);
             Assert.AreEqual(coords.AdminDistrict2, "Na h-Eileanan Siar");
         }
+        [TestCaseSource("NotNullTestCases")]
+        public async Task NotNullLocations(string location)
+        {
+            var locationFinder = new LocationFinder(new LocationFinderConfiguration { BingMapsKey = MAPS_KEY }, geocoder);
 
+            var coords = await locationFinder.GetLocationFromStringAsync(location);
+            Assert.NotNull(coords);
+            System.Threading.Thread.Sleep(100);//don't overload bing
+        }
+        public static IEnumerable<TestCaseData> NotNullTestCases()
+        {
+            var testCases = new List<TestCaseData>();
+
+            string[] lines = System.IO.File.ReadAllLines(@"not_null_locations.txt");
+
+            foreach (string line in lines)
+            {
+                testCases.Add(new TestCaseData(line));
+            }
+
+            if  (testCases != null)
+            {
+                foreach (TestCaseData testCaseData in testCases)
+                {
+                     yield return testCaseData;
+                }
+            }
+         }
         [Test]
         public async Task Test2()
         {
