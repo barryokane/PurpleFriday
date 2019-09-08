@@ -11,7 +11,7 @@ namespace PurpleFridayTweetListener.LocationFinder
     public class Tests
     {
         IGeocoder geocoder;
-        private string MAPS_KEY = "your map api key here";
+        private string MAPS_KEY = "AgS-Aff_4Hz2v_ZLSodkECygrDruiSiFCevdxLxLTafVOZ6gz_L01EOUTX7yCkqj";
         private static string NOT_NULL_FILENAME = "not_null_locations.txt";
 
         [SetUp]

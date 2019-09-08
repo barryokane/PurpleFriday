@@ -3,6 +3,7 @@ services:
 
     purplefridaytweetlistener:
         image: purplefridaytweetlistener:latest
+        restart: on-failure
         volumes:
             - type: bind
               source: ${HOME}/logs
@@ -15,6 +16,7 @@ services:
 
     webadmin:
         image: purplefriday_wa:latest
+        restart: on-failure        
         ports: 
             - "80:80"
         volumes:
