@@ -1,0 +1,42 @@
+debug = true
+
+[global]
+  checkNewVersion = true
+  sendAnonymousUsage = false
+
+[entryPoints]
+    [entryPoints.web]
+      address = ":80"
+    [entryPoints.web-secure]
+      address = ":443"
+
+[certificatesResolvers.default.acme]
+  email = "fund@lgbtyouth.org.uk"
+  storage = "acme/certs.json"
+  caServer = "https://acme-v01.api.letsencrypt.org/directory"
+  [certificatesResolvers.default.acme.httpChallenge]
+       entryPoint = "web"
+
+  [[acme.domains]] 
+     main = "purplefriday.lgbtyouth.org.uk"
+     sans = ["purplefriday.lgbtyouth.org.uk"]
+
+[log]
+  level = "DEBUG"
+  filePath = "acme/logfile.log"
+
+[accessLog]
+  filePath = "acme/access.log"
+
+[providers.docker]
+endpoint = "unix:///var/run/docker.sock"
+exposedByDefault = false
+watch = true
+
+[TLSOptions]
+  [TLSOptions.mintls12]
+    MinVersion = "VersionTLS12"
+    sniStrict = true
+  [TLSOptions.default]
+    MinVersion = "VersionTLS13"
+    sniStrict = true
