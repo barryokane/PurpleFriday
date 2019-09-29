@@ -297,7 +297,10 @@
     }
 
     function UpdateImages() {
-        $("#imageStream").html("loading...");
+        $("#LastRefresh").html("loading...");
+        
+        $("#imageStream").html("");
+
         $.get("/api/map?getall=true", function (data) {
             var template = $('#previewTemplate').html();
             for (i = 0; i < data.length; i++) {
