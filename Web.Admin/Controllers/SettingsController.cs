@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Web.Admin.Data;
 using Web.Admin.Models;
+using Microsoft.AspNetCore.Http.Extensions;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -31,11 +32,30 @@ namespace Web.Admin.Controllers
         {
             var settings = SettingsRepository.GetSettings(_settingsFolderPath);
 
-            var model = new SettingsPageModel {
+            var model = new SettingsPageModel
+            {
                 ApiKey = _configuration.GetValue<string>("IncomingMapAPIKey"),
                 TweetResponse = settings
             };
-            
+
+            return View(model);
+        }
+
+        // GET: /<controller>/
+        public IActionResult Embed()
+        {
+            var settings = SettingsRepository.GetSettings(_settingsFolderPath);
+
+            var model = new SettingsPageModel
+            {
+                ApiKey = _configuration.GetValue<string>("IncomingMapAPIKey"),
+                TweetResponse = settings
+            };
+
+            var url = $"{Request.Scheme}://{Request.Host}{Request.Path}";
+            ViewData["url"] = url;
+            ViewData["cachebust_qs"] = DateTime.Now.ToString("yyyyMMddHHmmss");
+
             return View(model);
         }
 

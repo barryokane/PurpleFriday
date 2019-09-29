@@ -1,0 +1,37 @@
+﻿@model SettingsPageModel
+@{
+    ViewData["Title"] = "Settings:Embed";
+}
+
+<h1>Embed the map</h1>
+
+<h5 style="color: green">@ViewData["message"]</h5>
+
+
+<p>
+    Copy and paste the code below and paste into your web page. The map will appear at the place in the page where this code is pasted.
+</p>
+    <div class="form-group">
+        <label for="ReplyTweetText">Embed code</label>
+        <textarea class="form-control" rows="6" name="EmbedCode" id="EmbedCode">
+
+<div id="mapEmbed" style="width: auto; height: 80vh; margin: 0 auto;"></div>
+<script type="text/javascript" src="@ViewData["url"]/embed/map.js?u=@ViewData["cachebust_qs"]" data-endpoint="@ViewData["url"]/api/map"></script>
+
+</textarea>
+    </div>
+
+    <button class="btn btn-default" data-clipboard-target="#EmbedCode">
+        Click here to copy code
+    </button>
+
+
+@section Scripts {
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+
+    new ClipboardJS('.btn');
+</script>
+
+}
