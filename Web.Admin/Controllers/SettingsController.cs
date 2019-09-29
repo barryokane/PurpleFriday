@@ -52,8 +52,7 @@ namespace Web.Admin.Controllers
                 TweetResponse = settings
             };
 
-            var url = $"{Request.Scheme}://{Request.Host}{Request.Path}";
-            ViewData["url"] = url;
+            ViewData["host"] = Request.Host;
             ViewData["cachebust_qs"] = DateTime.Now.ToString("yyyyMMddHHmmss");
 
             return View(model);

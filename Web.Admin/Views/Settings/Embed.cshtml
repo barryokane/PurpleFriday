@@ -11,27 +11,25 @@
 <p>
     Copy and paste the code below and paste into your web page. The map will appear at the place in the page where this code is pasted.
 </p>
-    <div class="form-group">
-        <label for="ReplyTweetText">Embed code</label>
-        <textarea class="form-control" rows="6" name="EmbedCode" id="EmbedCode">
+<div class="form-group">
+    <label for="ReplyTweetText">Embed code</label>
+    <textarea class="form-control" rows="6" name="EmbedCode" id="EmbedCode">
 
 <div id="mapEmbed" style="width: auto; height: 80vh; margin: 0 auto;"></div>
-<script type="text/javascript" src="@ViewData["url"]/embed/map.js?u=@ViewData["cachebust_qs"]" data-endpoint="@ViewData["url"]/api/map"></script>
+<script type="text/javascript" src="https://@ViewData["host"]/embed/map.js?u=@ViewData["cachebust_qs"]" data-endpoint="https://@ViewData["host"]/api/map"></script>
 
 </textarea>
-    </div>
+</div>
 
-    <button class="btn btn-default" data-clipboard-target="#EmbedCode">
-        Click here to copy code
-    </button>
+<button class="btn btn-default" data-clipboard-target="#EmbedCode">
+    Click here to copy code
+</button>
+
 
 
 @section Scripts {
 
-<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
-<script>
-
-    new ClipboardJS('.btn');
-</script>
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+    <script>new ClipboardJS('.btn');</script>
 
 }
