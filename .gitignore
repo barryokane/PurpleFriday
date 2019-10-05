@@ -362,4 +362,4 @@ prod.list.1
 
 
 #ignore the Docker files created by deploy.sh
-purplefiday*.tar
+purplefriday*.tar
