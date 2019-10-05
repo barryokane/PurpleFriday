@@ -150,15 +150,11 @@ The web adming contains an `appsettings.json` file in the root folder with the f
 - Web Admin project can be dployed straight to Azure using Visual Studio
 - The Tweet listener can be deployed as a WebJob on Azure. (TODO: update instructions here, but basically publish as an exe and upload as a zip file via Azure portal).
 
-### Other hosts
-The is a `run.sh` script in the `deployment` folder that is the start of us deploying to a remote host.  Run as follows:
-```
-./run.sh user ip_address ../
-```
-```
-user - the user on the remote host
-ip_address - the IP address of the remote host
-../ - the root of this repository
-```
+### Deploy to Linux 
+* Requires Docker
+* Run deploy.sh
+  * Option 1 to build & create Docker images
+  * Option 2 to upload and deploy the Docker images (you will need remote server connection details)
+  * Option 3 to restart remote Docker containers (useful if TweetListener stops working!)
 
-It's currently assumed that the remote host is running Ubuntu 18.04 LTS.
+//todo: add some more deployment help notes here...

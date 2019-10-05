@@ -359,3 +359,7 @@ prod.list.1
 
 # Ignore the file logs from the tweet listener
 **/Logs/*.txt
+
+
+#ignore the Docker files created by deploy.sh
+purplefiday*.tar
