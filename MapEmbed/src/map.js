@@ -140,18 +140,18 @@ $.throttle = jq_throttle = function( delay, no_trailing, callback, debounce_mode
 $(document).ready(() => {
   let geojson;
   let interactions = [];
-  debugger;
+  //debugger;
   const mapTag = $('script[src*="map.js"]');
   const apiEndpoint = mapTag.data('endpoint');
   const mapRootClass = mapTag.data('map-block-class') || 'map';
   const mapEmbedEl = $('#mapEmbed');
 
-  const interactionPanelMarkup = '<div class="interaction-panel"></div>';
-  const interactionPanelChildrenMarkup = ['<h2 class="interaction-panel__title"></h2>', '<div class="interaction-panel__search"><label><span class="label-text">Search for a twitter handle or tweet text</span><input class="js-interaction-panel-search" type="text" val="" /></label><button class="interaction-panel__search-clear js-interaction-panel-clear-search">Clear search</button><span class="interaction-panel__search-info js-search-info-results"></span></div>', '<div class="interaction-panel__tweet-list"></div>', '<p class="interaction-panel__no-data">We don\'t have any tweets from this area yet.</p>'];
+  const interactionPanelMarkup = '<div class="interaction-panel cleanslate"></div>';
+  const interactionPanelChildrenMarkup = ['<h2 class="interaction-panel__title cleanslate"></h2>', '<div class="interaction-panel__search cleanslate"><label><span class="label-text">Search for a twitter handle or tweet text</span><input class="js-interaction-panel-search" type="text" val="" /></label><button class="interaction-panel__search-clear js-interaction-panel-clear-search">Clear search</button><span class="interaction-panel__search-info js-search-info-results"></span></div>', '<div class="interaction-panel__tweet-list"></div>', '<p class="interaction-panel__no-data">We don\'t have any tweets from this area yet.</p>'];
   const rootContainerHtml = '<div class="' + mapRootClass + '__container"><div class="' + mapRootClass + '__map-container"></div>' + interactionPanelMarkup + '</div>';
 
-  const interactionPanelCardInfoMarkup = '<div class="tweet-card__info"><p class="tweet-card__name"></p><p class="tweet-card__date"></p><p class="tweet-card__text"></p></div>';
-  const interactionPanelCardMarkup = '<div class="tweet-card"><div class="tweet-card__image"><img /></div>' + interactionPanelCardInfoMarkup + '<a href="" target="_blank" class="tweet-card__link">View tweet</a></div>';
+  const interactionPanelCardInfoMarkup = '<div class="tweet-card__info cleanslate"><p class="tweet-card__name"></p><p class="tweet-card__date"></p><p class="tweet-card__text"></p></div>';
+  const interactionPanelCardMarkup = '<div class="tweet-card cleanslate"><div class="tweet-card__image"><img /></div>' + interactionPanelCardInfoMarkup + '<a href="" target="_blank" class="tweet-card__link">View tweet</a></div>';
   const tweetCardClasses = {
     TweetName: 'tweet-card__name',
     TweetImage: 'tweet-card__image',

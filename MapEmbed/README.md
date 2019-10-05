@@ -15,7 +15,7 @@ npm run build
 To do some local dev/testing run
 
 ```
-npm run deb
+npm run dev
 ```
 
 That will start a simple server with `livereload` on port 9000
