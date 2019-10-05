@@ -124,24 +124,7 @@ The listener communicates Twitter (either be listening to tweets, or replying) a
     "geo":[] //[latitude, longitude] - as a double[]
   }
   ```
-## Deployment
-
-### MS Azure
-- Web Admin project can be dployed straight to Azure using Visual Studio
-- The Tweet listener can be deployed as a WebJob on Azure. (TODO: update instructions here, but basically publish as an exe and upload as a zip file via Azure portal).
-
-### Other hosts
-The is a `run.sh` script in the `deployment` folder that is the start of us deploying to a remote host.  Run as follows:
-```
-./run.sh user ip_address ../
-```
-```
-user - the user on the remote host
-ip_address - the IP address of the remote host
-../ - the root of this repository
-```
-
-It's currently assumed that the remote host is running Ubuntu 18.04 LTS.
+  
 
 # Web Admin
 The web admin project handles the loading of the map and has the API for the incoming data from the tweet listener. It also contains an authorised moderataor section to hide tweets from the map. 
