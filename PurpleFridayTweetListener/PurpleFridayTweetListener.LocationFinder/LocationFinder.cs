@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace PurpleFridayTweetListener.LocationFinder
 {
@@ -15,17 +16,61 @@ namespace PurpleFridayTweetListener.LocationFinder
     {
         private IGeocoder _geoCoder;
         private readonly LocationFinderConfiguration _configuration;
+        private Dictionary<string, string> _locationOverrides;
 
         public LocationFinder(LocationFinderConfiguration configuration, IGeocoder geocoder)
         {
             _configuration = configuration;
             _geoCoder = geocoder;
+            _locationOverrides = LoadLocationOverridesFromFile();
+        }
+
+        public Dictionary<string, string> LoadLocationOverridesFromFile()
+        {
+            var LOCATION_OVERRIDE_FILE="/app/overrides/overrides.txt";
+            Console.WriteLine("Loading config from file {0}.", LOCATION_OVERRIDE_FILE);
+            var locOverrides = new Dictionary<string, string>();
+
+            if  (!File.Exists(LOCATION_OVERRIDE_FILE))
+            {
+                Console.WriteLine("Location Override File {0} does not exist", LOCATION_OVERRIDE_FILE);
+                return locOverrides; // Return empty dictionary
+            }
+
+            var lines = File.ReadAllLines(LOCATION_OVERRIDE_FILE);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].Contains('|'))
+                {
+                    var splitArray = lines[i].Split('|');
+                    if  (!locOverrides.ContainsKey(splitArray[0])) // Validate the key is unique already.
+                    {
+                        locOverrides.Add(splitArray[0],splitArray[1]);
+                        Console.WriteLine("Loaded {0} = {1}", splitArray[0],splitArray[1]);
+                    }
+                }
+            }            
+            return locOverrides;
+        }
+
+        public string InvokeLocationOverrideOrReturnOriginal(string location)
+        {
+            if  (_locationOverrides.Count() > 0)
+                if  (_locationOverrides.ContainsKey(location))
+                {
+                    Console.WriteLine("Location found in override. '{0}' replaced with '{1}'", location, _locationOverrides[location]);
+                    return _locationOverrides[location];
+                }
+            
+            return location;
+            
         }
 
         public async Task<LocationFinderResult> GetLocationFromStringAsync(string locationText)
         {
             try
             {
+                locationText = InvokeLocationOverrideOrReturnOriginal(locationText);
                 if (!locationText.EndsWith(",scotland", StringComparison.InvariantCultureIgnoreCase))
                 {
                     locationText = locationText + ",scotland"; //hack to restrict returned locations to scotland

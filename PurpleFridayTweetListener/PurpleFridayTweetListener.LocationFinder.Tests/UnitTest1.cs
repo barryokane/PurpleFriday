@@ -30,6 +30,7 @@ namespace PurpleFridayTweetListener.LocationFinder
             Assert.NotNull(coords);
             Assert.AreEqual(coords.AdminDistrict2, "City of Edinburgh");
         }
+        
         [Test]
         public async Task Alva()
         {
@@ -40,6 +41,7 @@ namespace PurpleFridayTweetListener.LocationFinder
             Assert.NotNull(coords);
             Assert.AreEqual(coords.AdminDistrict2, "Clackmannanshire");
         }
+
         [Test]
         public async Task TestScotlandHack()
         {
@@ -49,6 +51,7 @@ namespace PurpleFridayTweetListener.LocationFinder
 
             Assert.NotNull(coords);
         }
+
         [Test]
         public async Task TestSkye()
         {
@@ -58,6 +61,7 @@ namespace PurpleFridayTweetListener.LocationFinder
 
             Assert.NotNull(coords);
         }
+
         [Test]
         public async Task TestForScotlandOnly()
         {
@@ -80,6 +84,7 @@ namespace PurpleFridayTweetListener.LocationFinder
                 System.Threading.Thread.Sleep(1000);//don't overload bing
             }
         }
+
         [Test]
         public async Task TestWesternIsles()
         {
@@ -90,6 +95,7 @@ namespace PurpleFridayTweetListener.LocationFinder
             Assert.NotNull(coords);
             Assert.AreEqual(coords.AdminDistrict2, "Na h-Eileanan Siar");
         }
+
         [TestCaseSource("NotNullTestCases")]
         public async Task NotNullLocations(string location)
         {
@@ -99,11 +105,12 @@ namespace PurpleFridayTweetListener.LocationFinder
             Assert.NotNull(coords);
             System.Threading.Thread.Sleep(100);//don't overload bing
         }
+
         public static IEnumerable<TestCaseData> NotNullTestCases()
         {
             var testCases = new List<TestCaseData>();
 
-            string[] lines = System.IO.File.ReadAllLines(@"not_null_locations.txt");
+            string[] lines = System.IO.File.ReadAllLines(NOT_NULL_FILENAME);
 
             foreach (string line in lines)
             {
@@ -118,12 +125,32 @@ namespace PurpleFridayTweetListener.LocationFinder
                 }
             }
          }
+
         [Test]
         public async Task Test2()
         {
-
             var address = await geocoder.GeocodeAsync("United States");
             Assert.NotNull(address);
         }
+
+        [Test]
+        public async Task TestOverride()
+        {
+            Dictionary<string, string> testLocations = new Dictionary<string, string>();
+            testLocations["northqueensferry"] = "North Queensferry";
+            testLocations["skye"] = "Isle of Skye";
+            testLocations["standrews"] = "St Andrews";
+            testLocations["johnogroats"] = "John O'Groats";
+            testLocations["nothere"] = "nothere";           // Return back what was passed.
+
+
+            var locationFinder = new LocationFinder(new LocationFinderConfiguration { BingMapsKey = MAPS_KEY }, geocoder);
+
+            foreach (var location in testLocations)
+            {
+                var overrideString = locationFinder.InvokeLocationOverrideOrReturnOriginal(location.Key);
+                Assert.AreEqual(overrideString, location.Value);
+            }
+        }        
     }
 }

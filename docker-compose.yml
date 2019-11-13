@@ -9,6 +9,9 @@ services:
             - type: bind
               source: ${HOME}/logs
               target: /app/logs
+            - type: bind
+              source: ${HOME}/overrides
+              target: /app/overrides
         links:
             - webadmin
         

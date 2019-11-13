@@ -7,5 +7,6 @@ namespace PurpleFridayTweetListener.LocationFinder
     public class LocationFinderConfiguration
     {
         public string BingMapsKey { get; set; }
+        private Dictionary<string, string> LocationOverrides { get; set; }
     }
 }
