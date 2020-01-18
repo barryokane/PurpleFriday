@@ -1,0 +1,47 @@
+version: '3.7'
+services:
+
+    purplefridaytweetlistener:
+        image: purplefridaytweetlistener:latest
+        container_name: "purplefridaytweetlistener"
+        restart: on-failure
+        volumes:
+            - type: bind
+              source: ${HOME}/logs
+              target: /app/logs
+            - type: bind
+              source: ${HOME}/overrides
+              target: /app/overrides
+        links:
+            - webadmin
+        
+        networks:
+            - backend
+
+    webadmin:
+        image: purplefriday_wa:latest
+        container_name: "webadmin"
+        restart: on-failure 
+        ports:
+            - "80:80" 
+        volumes:
+            - type: bind
+              source: ${HOME}/_datastore
+              target: /app/_datastore
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.web.rule=Host(`purplefriday.lgbtyouth.org.uk`)"
+            - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
+            - "traefik.http.routers.web.middlewares=https_redirect"
+            - "traefik.http.routers.web-secure.rule=Host(`purplefriday.lgbtyouth.org.uk`)"
+            - "traefik.http.routers.web-secure.tls=true"
+            - "traefik.http.routers.web-secure.tls.certResolver=default"
+        networks:
+            - backend
+
+networks:
+#  traefik_proxy:
+#    external:
+#        name: traefik_proxy
+  backend:
+    driver: "bridge"
