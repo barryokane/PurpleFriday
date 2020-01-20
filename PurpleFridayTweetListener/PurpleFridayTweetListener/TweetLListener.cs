@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Tweetinvi;
 using Tweetinvi.Models;
+using PurpleFridayTweetListener.Logger;
 
 namespace PurpleFridayTweetListener
 {
@@ -63,11 +64,11 @@ namespace PurpleFridayTweetListener
 
                 string tweetResponseText;
 
-                Console.WriteLine($"Tweet received: {targs.Tweet.Text}");
+                Logging.Information($"Tweet received: {targs.Tweet.Text}");
                 
                 if (targs.Tweet.Place != null)
                 {
-                    Console.WriteLine(targs.Json);
+                    Logging.Debug(targs.Json);
                     tweetResponseText = await HandleTweetWithLocationData(targs.Tweet);
                 }
                 else
@@ -80,20 +81,20 @@ namespace PurpleFridayTweetListener
                     // We must add @screenName of the author of the tweet we want to reply to
                     var textToPublish = $"@{targs.Tweet.CreatedBy.ScreenName} {tweetResponseText}";
                     var tweet = Tweet.PublishTweetInReplyTo(textToPublish, targs.Tweet.Id);
-                    Console.WriteLine($"Publish success: {tweet != null}");
+                    Logging.Debug($"Publish success: {tweet != null}");
                 }
             };
 
             stream.StreamStarted += (sender, streamArgs) =>
             {
-                Console.WriteLine("Stream started");
+                Logging.Information("Stream started");
             };
 
             stream.StreamStopped += (sender, streamArgs) =>
             {
                 var exceptionThatCausedTheStreamToStop = streamArgs.Exception;
                 var twitterDisconnectMessage = streamArgs.DisconnectMessage;
-                Console.WriteLine($"Disconnected {streamArgs.Exception.Message}");
+                Logging.Fatal($"Disconnected {streamArgs.Exception.Message}");
             };
 
             stream.StartStreamMatchingAllConditions();
@@ -101,16 +102,16 @@ namespace PurpleFridayTweetListener
 
         protected async Task<string> HandleTweetWithLocationData(ITweet tweet)
         {
-            Console.WriteLine("Tweet place bounding box:");
+            Logging.Debug("Tweet place bounding box:");
             foreach (var coord in tweet.Place.BoundingBox.Coordinates)
             {
-                Console.WriteLine($"{coord.Latitude} - {coord.Longitude}");
+                Logging.Debug($"{coord.Latitude} - {coord.Longitude}");
             }
 
             var coordinateList = tweet.Place.BoundingBox.Coordinates.Select(x => new LocationFinder.Coordinates { Latitude = x.Latitude, Longitude = x.Longitude }).ToList();
             var centerPoint = _locationFinder.GetCentralGeoCoordinate(coordinateList);
 
-            Console.WriteLine($"Center point: {centerPoint.Latitude} - {centerPoint.Longitude}");
+            Logging.Debug($"Center point: {centerPoint.Latitude} - {centerPoint.Longitude}");
 
             var tweetData = new TweetData
             {
@@ -171,8 +172,8 @@ namespace PurpleFridayTweetListener
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error forwarding data to client: {e.Message}");
-                Console.WriteLine(JsonConvert.SerializeObject(data));
+                Logging.Error($"Error forwarding data to client: {e.Message}");
+                Logging.Debug(JsonConvert.SerializeObject(data));
                 return null;
             }
 

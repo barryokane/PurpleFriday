@@ -1,6 +1,10 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build-env
 WORKDIR /app
 
+WORKDIR /app/PurpleFridayTweetListener.Logger
+COPY PurpleFridayTweetListener.Logger/*.csproj .
+RUN dotnet restore
+
 # copy csproj and restore as distinct layers
 WORKDIR /app/PurpleFridayTweetListener.Communicator
 COPY PurpleFridayTweetListener.Communicator/*.csproj .

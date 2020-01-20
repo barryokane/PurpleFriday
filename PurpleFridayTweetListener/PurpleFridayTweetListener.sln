@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PurpleFridayTweetListener.L
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PurpleFridayTweetListener.Communicator", "PurpleFridayTweetListener.Communicator\PurpleFridayTweetListener.Communicator.csproj", "{0A9E1B66-D421-47F8-A06F-25CF83689416}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PurpleFridayTweetListener.Logger", "PurpleFridayTweetListener.Logger\PurpleFridayTweetListener.Logger.csproj", "{E926D1E5-B16E-49FA-B7EB-9AD639D09B7B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{0A9E1B66-D421-47F8-A06F-25CF83689416}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A9E1B66-D421-47F8-A06F-25CF83689416}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A9E1B66-D421-47F8-A06F-25CF83689416}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E926D1E5-B16E-49FA-B7EB-9AD639D09B7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E926D1E5-B16E-49FA-B7EB-9AD639D09B7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E926D1E5-B16E-49FA-B7EB-9AD639D09B7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E926D1E5-B16E-49FA-B7EB-9AD639D09B7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
