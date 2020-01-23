@@ -7,10 +7,10 @@ services:
         restart: on-failure
         volumes:
             - type: bind
-              source: ${HOME}/logs
+              source: ${PFHOME}/logs
               target: /app/logs
             - type: bind
-              source: ${HOME}/overrides
+              source: ${PFHOME}/overrides
               target: /app/overrides
         links:
             - webadmin
@@ -26,7 +26,7 @@ services:
             - 80 
         volumes:
             - type: bind
-              source: ${HOME}/_datastore
+              source: ${PFHOME}/_datastore
               target: /app/_datastore
         labels:
             - "traefik.enable=true"

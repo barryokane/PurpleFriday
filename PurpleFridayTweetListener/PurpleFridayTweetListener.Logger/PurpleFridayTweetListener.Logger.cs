@@ -24,7 +24,7 @@ namespace PurpleFridayTweetListener.Logger
                     _logger = new LoggerConfiguration()
                         .MinimumLevel.Debug()
                         .WriteTo.Console()
-                        .WriteTo.File(filePath, rollingInterval: RollingInterval.Day)
+                        .WriteTo.File(filePath)
                         .CreateLogger();   
 
                     _logger.Information("Creating File Logger");

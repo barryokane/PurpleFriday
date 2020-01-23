@@ -4,3 +4,8 @@ scrape_configs:
   static_configs:
   - targets:
     - cadvisor:8080
+- job_name: grok_exporter
+  scrape_interval: 5s
+  static_configs:
+  - targets:
+    - grok_exporter:9144 

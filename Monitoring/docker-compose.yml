@@ -1,5 +1,16 @@
 version: '3.2'
 services:
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+        - 127.0.0.1:3000:3000    
+    volumes:
+        - ${PFHOME}/monitoring/grafana-storage:/var/lib/grafana
+    networks:
+        - backend_mon  
+      
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
@@ -9,10 +20,11 @@ services:
         - --config.file=/etc/prometheus/prometheus.yml
     volumes:
         - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+        - ./prom-data:/prometheus:rw
     depends_on:
         - cadvisor
     networks:
-        - backend    
+        - backend_mon  
 
   cadvisor:
     image: google/cadvisor:latest
@@ -27,17 +39,37 @@ services:
     depends_on:
         - redis
     networks:
-        - backend    
+        - backend_mon    
+
+  grok_exporter:
+    image: palobo/grok_exporter
+    container_name: grok_exporter
+    ports:
+        - 127.0.0.1:9144:9144
+    volumes:
+        - ./logstash-patterns-core:/logstash-patterns-core
+        - ./grok_exporter.yml:/etc/grok_exporter/config.yml
+        - ${PFHOME}/logs:/app/logs
+    depends_on:
+        - redis
+    networks:
+        - backend_mon
 
   redis:
     image: redis:latest
     container_name: redis
+    environment:
+        - REDIS_PASS=mypassword
+        - REDIS_APPENDONLY=yes
+        - REDIS_APPENDFSYNC=always    
+    volumes:
+        - ${PFHOME}/monitoring/data:/data
     ports:
         - 127.0.0.1:6379:6379
     networks:
-        - backend    
+        - backend_mon
 
 networks:
-    backend:
+    backend_mon:
         driver: "bridge"
         external: false
