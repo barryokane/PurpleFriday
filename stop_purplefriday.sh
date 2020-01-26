@@ -4,6 +4,8 @@
 # - Stops Docker containers for PurpleFriday and Monitoring.
 # ---------------------
 
+RUNNING_MODE=${1:-dev} 
+
 SEPARATOR="----------------------------"
 export PFHOME="$PWD"
 
@@ -17,7 +19,12 @@ function stop_purplefriday()
 {
     echo ${SEPARATOR}
     echo "Stopping PurpleFriday"
-    docker-compose down
+
+    if  [[ ${RUNNING_MODE} == "dev" ]] ; then
+        docker-compose -f docker-compose.development.yml down
+    else
+        docker-compose -f docker-compose.yml down
+    fi
 }
 
 function stop_monitoring()
