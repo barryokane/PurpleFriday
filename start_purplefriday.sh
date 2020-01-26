@@ -69,6 +69,7 @@ function setup_directories()
 	fi
 	mkdir -v -p ${PFHOME}/{logs,_datastore,overrides,traefik,Monitoring}
 	mkdir -v -p ${PFHOME}/Monitoring/{data,grafana-storage,prom-data}
+        chmod -R 777 ${PFHOME}/Monitoring # Give Docker permission to create folders / files under the Monitoring directory.
 	find ${PFHOME} -type d   # List the folder structure under $PFHOME as mkdir -v is unreliable
     fi
 }

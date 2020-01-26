@@ -5,6 +5,7 @@
 # ---------------------
 
 SEPARATOR="----------------------------"
+export PFHOME="$PWD"
 
 function error_handler()
 {
