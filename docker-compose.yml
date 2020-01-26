@@ -4,7 +4,6 @@ services:
     purplefridaytweetlistener:
         image: purplefridaytweetlistener:latest
         container_name: "purplefridaytweetlistener"
-        restart: on-failure
         volumes:
             - type: bind
               source: ${PFHOME}/logs
