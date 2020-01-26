@@ -12,5 +12,11 @@ metrics:
       name: tweets_received_total
       help: Total number of tweets received
       match: '%{TIMESTAMP_ISO8601}%{GREEDYDATA}Tweet received'
+    - type: counter
+      name: fatal_errors
+      help: The different types of Fatal Error being observed
+      match: '%{TIMESTAMP_ISO8601}%{GREEDYDATA}[FTL]%{GREEDYDATA:err_type}'
+      labels:
+          user: '{{.err_type}}'      
 server:
     port: 9144
