@@ -15,8 +15,9 @@ metrics:
     - type: counter
       name: fatal_errors
       help: The different types of Fatal Error being observed
-      match: '%{TIMESTAMP_ISO8601}%{GREEDYDATA}[FTL]%{GREEDYDATA:err_type}'
+      match: '%{TIMESTAMP_ISO8601}%{GREEDYDATA}\[FTL\] %{GREEDYDATA:err_type}'
       labels:
-          user: '{{.err_type}}'      
+          err_type: '{{.err_type}}'
+      
 server:
     port: 9144
