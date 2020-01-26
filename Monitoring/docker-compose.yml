@@ -63,7 +63,7 @@ services:
         - REDIS_APPENDONLY=yes
         - REDIS_APPENDFSYNC=always    
     volumes:
-        - ${PFHOME}/monitoring/data:/data
+        - ${PFHOME}/Monitoring/redis-data:/data
     ports:
         - 127.0.0.1:6379:6379
     networks:
@@ -72,4 +72,3 @@ services:
 networks:
     backend_mon:
         driver: "bridge"
-        external: false
