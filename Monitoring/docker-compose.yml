@@ -7,7 +7,7 @@ services:
     ports:
         - 127.0.0.1:3000:3000    
     volumes:
-        - ${PFHOME}/monitoring/grafana-storage:/var/lib/grafana
+        - ${PFHOME}/Monitoring/grafana-storage:/var/lib/grafana
     networks:
         - backend_mon  
       
@@ -20,7 +20,7 @@ services:
         - --config.file=/etc/prometheus/prometheus.yml
     volumes:
         - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
-        - ${PFHOME}/prom-data:/prometheus:rw
+        - ${PFHOME}/Monitoring/prom-data:/prometheus:rw
     depends_on:
         - cadvisor
     networks:
