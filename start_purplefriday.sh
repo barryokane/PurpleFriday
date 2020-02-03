@@ -9,24 +9,29 @@
 PF_TEMP=${PFHOME:-$1}                # Parameter 1: Home directory for persistent files e.g. _datastore, logs etc.
 export PFHOME=${PF_TEMP:-$HOME}      #     Works in order of precednce:
                                      #        1. PFHOME environment variable (eg. an exported variable outside script)
-			             #        2. Parameter 1 inputted to this script
-				     #        3. $HOME for the user running the script.
-				     #
+			                         #        2. Parameter 1 inputted to this script
+				                     #        3. $HOME for the user running the script.
+				                     #
 SETUP_DIRS="${2}"                    # Parameter 2: Should we set up the directory structure (Y/[N]). 
                                      #
 RUNNING_MODE=${3:-dev}               # Parameter 3: Running mode. dev (default) or prod 
-				     #      - dev = docker-compose.development.yml - No HTTPS, to be used for development.
+				                     #      - dev = docker-compose.development.yml - No HTTPS, to be used for development.
                                      #      - prod = docker-compose.yml             - Traefik sets up HTTPS, different ports opened.
-				     #
-				     # Examples:
-				     #    ./start_purplefriday.sh - If directory structure is set up,
-				     #                              The PFHOME environment variable is exported elsewhere
-				     #                              The running mode is dev.
-				     #
-				     #    ./start_purplefriday.sh "${HOME}/PF" "Y" "prod"
-				     #                            - To set up the directory structure against ${HOME}/PF.
-				     #                              And then run PurpleFriday with HTTPS.
-				     #
+                                     #
+START_MONITORING=${4:-N}             # Parameter 4: Run Monitoring. Default (N)o.
+
+									 #
+									 # Examples:
+									 #    ./start_purplefriday.sh - If directory structure is set up,
+								     #                              The PFHOME environment variable is exported elsewhere
+									 #                              The running mode is dev.
+									 #                              Does not run monitoring.
+									 #
+									 #    ./start_purplefriday.sh "${HOME}/PF" "Y" "prod" "Y"
+									 #                            - To set up the directory structure against ${HOME}/PF.
+									 #                              And then run PurpleFriday with HTTPS. Also runs monitoring.
+									 #
+
 SEPARATOR="----------------------------"
 
 function error_handler()
@@ -68,7 +73,7 @@ function setup_directories()
 	    exit 0
 	fi
 	mkdir -v -p ${PFHOME}/{logs,_datastore,overrides,traefik,Monitoring}
-	mkdir -v -p ${PFHOME}/Monitoring/{redis-data,grafana-storage,prom-data}
+	mkdir -v -p ${PFHOME}/Monitoring/{grafana-storage,prom-data}
         mkdir -v -p ${PFHOME}/Monitoring/grafana-storage/plugins
 	chmod -R 777 ${PFHOME}/Monitoring # Give Docker permission to create folders / files under the Monitoring directory.
 	find ${PFHOME} -type d   # List the folder structure under $PFHOME as mkdir -v is unreliable
@@ -102,7 +107,10 @@ function main()
 
     setup_directories
     start_purplefriday
-    start_monitoring
+
+	if  [[ ${START_MONITORING^^} != "N" ]] ; then
+        start_monitoring
+	fi
 }
 
 main "$@"

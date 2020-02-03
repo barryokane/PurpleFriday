@@ -44,12 +44,12 @@ namespace PurpleFridayTweetListener
             if (bool.Parse(config["Logging:LogToFile"]))
             {
                 // Log to console and file.
-                Logging.SetupLogging(config["Logging:LogFolderPath"]);          
+                Logging.SetupLogging(config["Logging:LogFolderPath"],config["Logging:LogToSingleFile"]);          
             }
             else
             {
                 // Log to console only.
-                Logging.SetupLogging(null);
+                Logging.SetupLogging();
             }
 
             Logging.Information("Starting PurpleFridayTweetListener");

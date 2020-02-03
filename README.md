@@ -78,12 +78,14 @@ The settings for the Listener are:
   
   The logging settings:
   * LogToFile - when true, the console output will be redirected to a log file in the `LogFolderPath`
-  * LogFolderPath - an absolute file path to a directory that should be used for storing logs. Note: the application must have permissions to create, read and write files in the location.
+  * LogToSingleFile - when true, will only write to file in LogFolderPath; when false, will roll the file each day and add a timestamp in the name.
+  * LogFolderPath - a file path to a directory that should be used for storing logs. Note: the application must have permissions to create, read and write files in the location.
   
   ```
     "Logging": {
-    "LogToFile":  true,
-    "LogFolderPath": "C:/Users/markm/Code/PurpleFriday/PurpleFridayTweetListener/PurpleFridayTweetListener/Logs/"
+      "LogToFile":  true,
+      "LogToSingleFile": true,
+      "LogFolderPath": "C:/Users/markm/Code/PurpleFriday/PurpleFridayTweetListener/PurpleFridayTweetListener/Logs/"
   }
   ```
   
@@ -98,7 +100,49 @@ The settings for the Listener are:
   ```
 which will indicate that the app has successfully started and the Twitter stream is listening.
 
+  ## Running the application in Docker (Linux/Mac)
 
+  To create local Docker images, run the following command from the top of the repository:
+
+```
+./create_docker_images.sh
+```
+
+  To run the application, run the following script. It accepts 4 parameters:
+```
+./start_purplefriday.sh    # Parameter 1: Home directory for persistent files e.g. _datastore, logs etc.
+                           #     Works in order of precednce:
+                           #        1. PFHOME environment variable (eg. an exported variable outside script)
+                           #        2. Parameter 1 inputted to this script
+                           #        3. $HOME for the user running the script.
+                           # --
+                           # Parameter 2: Should we set up the directory structure (Y/[N]). 
+                           # --
+                           # Parameter 3: Running mode. dev (default) or prod 
+                           # --
+                           # Parameter 4: Start Monitoring? Default is (N)o.
+                           # --
+```
+
+Examples:
+
+```
+./start_purplefriday.sh 
+                            - If directory structure is set up,
+                              The PFHOME environment variable is exported elsewhere
+                              The running mode is dev.
+                              Does not run monitoring.
+
+./start_purplefriday.sh "${HOME}/PF" "Y" "prod" "Y"
+                            - To set up the directory structure against ${HOME}/PF.
+                              And then run PurpleFriday in prod mode with HTTPS. Also runs monitoring.
+
+```
+To stop the application, run:
+
+```
+./stop_purplefriday.sh
+```
 
 # How it works
 
@@ -144,6 +188,79 @@ The web adming contains an `appsettings.json` file in the root folder with the f
   }
 ```
 
+## HTTPS Support (Linux/Mac)
+This application has HTTPS support for Docker containers via Traefik, with the setup defined in `traefik\traefik.toml`.
+
+## Monitoring (Linux/Mac)
+This application also comes with Monitoring built-in, carried out by:
+* Grafana - For visualisation and alerting.
+* Prometheus - For collector aggregation.
+* Grok_Exporter - For log file pattern collection.
+* cAdvisor - For container metric collection.
+
+These all run within Docker containers, which you can choose to run as part of `start_purplefriday.sh`.
+
+When all the containers are running, you can load Grafana at [http://localhost:3000/]. Default username and password is admin:admin.
+
+After you have added Prometheus as a data source (<http://prometheus:9090>, I would recommend importing the following dashboard: <https://grafana.com/grafana/dashboards/193> to begin monitoring your application.
+
+### Prometheus.yml
+
+The following configuration file advises Prometheus to pull in the metics from cAdvisor and Grok_Exporter every 5 seconds.
+
+```
+scrape_configs:
+- job_name: cadvisor
+  scrape_interval: 5s
+  static_configs:
+  - targets:
+    - cadvisor:8080
+- job_name: grok_exporter
+  scrape_interval: 5s
+  static_configs:
+  - targets:
+    - grok_exporter:9144
+```
+
+This configuration file must be visible to the Prometheus container and is set up as follows:
+
+```
+    command:
+        - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+        - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+```
+
+### Grok_Exporter.yml
+
+Grok_Exporter allows you to pull out metrics by pattern matching log files - here is an extract of how it is used in PurpleFriday:
+
+```
+metrics:
+    - type: counter
+      name: tweets_received_total
+      help: Total number of tweets received
+      match: '%{TIMESTAMP_ISO8601}%{GREEDYDATA}Tweet received'
+    - type: counter
+      name: fatal_errors
+      help: The different types of Fatal Error being observed
+      match: '%{TIMESTAMP_ISO8601}%{GREEDYDATA}\[FTL\] %{GREEDYDATA:err_type}'
+      labels:
+          err_type: '{{.err_type}}'
+```
+
+This is collating metrics based on the tweets received, and the number of fatal errors (and type) that it finds in the log file.
+
+This file must also be mapped in the `docker-compose.yml`:
+
+```
+    volumes:
+        - ./logstash-patterns-core:/logstash-patterns-core
+        - ./grok_exporter.yml:/etc/grok_exporter/config.yml
+        - ${PFHOME}/logs:/app/logs
+```
+
+
 ## Deployment
 
 ### MS Azure
@@ -152,7 +269,7 @@ The web adming contains an `appsettings.json` file in the root folder with the f
 
 ### Deploy to Linux 
 * Requires Docker
-* Run deploy.sh
+* Manual deploy: Run deploy.sh
   * Option 1 to build & create Docker images
   * Option 2 to upload and deploy the Docker images (you will need remote server connection details)
   * Option 3 to restart remote Docker containers (useful if TweetListener stops working!)

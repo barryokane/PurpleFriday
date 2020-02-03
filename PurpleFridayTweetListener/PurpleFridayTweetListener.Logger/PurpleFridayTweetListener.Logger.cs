@@ -7,11 +7,11 @@ namespace PurpleFridayTweetListener.Logger
     {
         static Serilog.Core.Logger _logger;
         
-        public static void SetupLogging(string filePath)
+        public static void SetupLogging(string filePath = "",bool logToSingleFile)
         {
             if (_logger == null)
             {
-                if  (filePath == null)
+                if  (filePath == "")
                 {
                     _logger = new LoggerConfiguration()
                         .MinimumLevel.Debug()
@@ -21,13 +21,26 @@ namespace PurpleFridayTweetListener.Logger
                 }
                 else
                 {
-                    _logger = new LoggerConfiguration()
-                        .MinimumLevel.Debug()
-                        .WriteTo.Console()
-                        .WriteTo.File(filePath)
-                        .CreateLogger();   
+                    if  (logToSingleFile)
+                    {
+                        _logger = new LoggerConfiguration()
+                            .MinimumLevel.Debug()
+                            .WriteTo.Console()
+                            .WriteTo.File(filePath, rollingInterval: RollingInterval.Day)
+                            .CreateLogger();   
 
-                    _logger.Information("Creating File Logger");
+                        _logger.Information("Creating File Logger - logging to file that rolls over daily");
+                    }
+                    else
+                    {
+                        _logger = new LoggerConfiguration()
+                            .MinimumLevel.Debug()
+                            .WriteTo.Console()
+                            .WriteTo.File(filePath)
+                            .CreateLogger();   
+
+                        _logger.Information("Creating File Logger - logging to single file at {0}",filePath);
+                    }
                 }
             }
             else
