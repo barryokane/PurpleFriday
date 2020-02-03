@@ -108,8 +108,8 @@ function main()
     setup_directories
     start_purplefriday
 
-	if  [[ ${START_MONITORING^^} != "N" ]] ; then
-        start_monitoring
+	if  [[ ${START_MONITORING} != "N" ]] ; then
+            start_monitoring
 	fi
 }
 

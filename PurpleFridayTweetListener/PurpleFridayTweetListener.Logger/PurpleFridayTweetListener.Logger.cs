@@ -21,7 +21,7 @@ namespace PurpleFridayTweetListener.Logger
                 }
                 else
                 {
-                    if  (logToSingleFile == "false")
+                    if  (logToSingleFile.ToLower() == "false")
                     {
                         _logger = new LoggerConfiguration()
                             .MinimumLevel.Debug()
