@@ -7,7 +7,7 @@ namespace PurpleFridayTweetListener.Logger
     {
         static Serilog.Core.Logger _logger;
         
-        public static void SetupLogging(string filePath = "",bool logToSingleFile)
+        public static void SetupLogging(string filePath = "",string logToSingleFile = "false")
         {
             if (_logger == null)
             {
@@ -21,7 +21,7 @@ namespace PurpleFridayTweetListener.Logger
                 }
                 else
                 {
-                    if  (logToSingleFile)
+                    if  (logToSingleFile == "false")
                     {
                         _logger = new LoggerConfiguration()
                             .MinimumLevel.Debug()
