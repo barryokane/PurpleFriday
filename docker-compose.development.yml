@@ -18,6 +18,20 @@ services:
         networks:
             - backend
 
+    cacheserver:
+        image: cacheserver:latest
+        container_name: "cacheserver"       
+        restart: on-failure
+        ports: 
+           - 5000:80
+        volumes:
+           - ./cacheserver/nginx.conf:/etc/nginx/nginx.conf:ro
+        environment:
+           - CACHE_MEM_SIZE=1000m
+           - CACHE_DISK_SIZE=1000m 
+        networks:    
+           - backend
+
     webadmin:
         image: purplefriday_wa:latest
         container_name: "webadmin"
