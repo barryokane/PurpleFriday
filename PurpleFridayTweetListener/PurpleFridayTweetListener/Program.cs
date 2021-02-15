@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Tweetinvi;
 using PurpleFridayTweetListener.Logger;
+using System.Threading;
 
 namespace PurpleFridayTweetListener
 {   
@@ -44,15 +45,19 @@ namespace PurpleFridayTweetListener
             if (bool.Parse(config["Logging:LogToFile"]))
             {
                 // Log to console and file.
-                Logging.SetupLogging(config["Logging:LogFolderPath"]);          
+                Logging.SetupLogging(config["Logging:LogFolderPath"],config["Logging:LogToSingleFile"]);          
             }
             else
             {
                 // Log to console only.
-                Logging.SetupLogging(null);
+                Logging.SetupLogging();
             }
 
             Logging.Information("Starting PurpleFridayTweetListener");
+
+            Logging.Information("Putting in 10 second wait so we don't spam Twitter in the event of a restart");
+            Thread.Sleep(10000);
+            Logging.Information("Sleep finished");
 
             var tweetListenerConfig = new TweetListenerConfig();
             config.Bind("Listener", tweetListenerConfig);

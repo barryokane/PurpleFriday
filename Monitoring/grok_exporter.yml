@@ -1,0 +1,23 @@
+global:
+    config_version: 2
+input:
+    type: file
+    path: /app/logs/purplefridaytweetlistener.log
+    fail_on_missing_logfile: false
+    readall: true
+grok:
+    patterns_dir: /logstash-patterns-core/patterns
+metrics:
+    - type: counter
+      name: tweets_received_total
+      help: Total number of tweets received
+      match: '%{TIMESTAMP_ISO8601}%{GREEDYDATA}Tweet received'
+    - type: counter
+      name: fatal_errors
+      help: The different types of Fatal Error being observed
+      match: '%{TIMESTAMP_ISO8601}%{GREEDYDATA}\[FTL\] %{GREEDYDATA:err_type}'
+      labels:
+          err_type: '{{.err_type}}'
+      
+server:
+    port: 9144

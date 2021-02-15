@@ -7,10 +7,10 @@ services:
         restart: on-failure
         volumes:
             - type: bind
-              source: ${HOME}/logs
+              source: ${PFHOME}/logs
               target: /app/logs
             - type: bind
-              source: ${HOME}/overrides
+              source: ${PFHOME}/overrides
               target: /app/overrides
         links:
             - webadmin
@@ -18,30 +18,68 @@ services:
         networks:
             - backend
 
+    cacheserver:
+      image: cacheserver:latest
+      container_name: "cacheserver"
+      restart: on-failure
+      ports:
+        - 80
+      volumes:
+        - ./cacheserver/nginx.conf:/etc/nginx/nginx.conf:ro
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.osm.rule=(Host(`localhost`) && PathPrefix(`/osm_proxy`))"
+        - "traefik.http.routers.osm.entrypoints=web"
+        - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
+        - "traefik.http.routers.osm.middlewares=https_redirect"
+        - "traefik.http.routers.osm-secure.rule=(Host(`localhost`) && PathPrefix(`/osm_proxy`))"
+        - "traefik.http.routers.osm-secure.entrypoints=web-secure"
+        - "traefik.http.routers.osm-secure.tls=true"
+        - "traefik.http.routers.osm-secure.tls.certResolver=default"
+        - "traefik.http.routers.osm-secure.middlewares=striposm"          
+        - "traefik.http.middlewares.striposm.stripprefix.prefixes=/osm_proxy"
+      environment:
+        - CACHE_MEM_SIZE=1000m
+        - CACHE_DISK_SIZE=1000m
+      networks:
+        - backend
+
     webadmin:
-        image: purplefriday_wa:latest
-        container_name: "webadmin"
-        restart: on-failure 
-        ports:
-            - "80:80" 
-        volumes:
-            - type: bind
-              source: ${HOME}/_datastore
-              target: /app/_datastore
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.web.rule=Host(`purplefriday.lgbtyouth.org.uk`)"
-            - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
-            - "traefik.http.routers.web.middlewares=https_redirect"
-            - "traefik.http.routers.web-secure.rule=Host(`purplefriday.lgbtyouth.org.uk`)"
-            - "traefik.http.routers.web-secure.tls=true"
-            - "traefik.http.routers.web-secure.tls.certResolver=default"
-        networks:
-            - backend
+      image: purplefriday_wa:latest
+      container_name: "webadmin"
+      restart: on-failure
+      ports:
+        - 80
+      volumes:
+        - type: bind
+          source: ${PFHOME}/_datastore
+          target: /app/_datastore
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.web.rule=Host(`localhost`)"
+        - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
+        - "traefik.http.routers.web.middlewares=https_redirect"
+        - "traefik.http.routers.web-secure.rule=Host(`localhost`)"
+        - "traefik.http.routers.web-secure.tls=true"
+        - "traefik.http.routers.web-secure.tls.certResolver=default"
+      networks:
+        - backend
+
+    traefik:
+      image: "traefik:v2.0.0-rc3"
+      container_name: "traefik"
+      depends_on:
+        - webadmin
+      ports:
+        - "80:80"
+        - "443:443"
+      volumes:
+        - "/var/run/docker.sock:/var/run/docker.sock:ro"
+        - ./traefik/traefik.dev.toml:/etc/traefik/traefik.toml # Traefik configuration file
+        - ./traefik/acme:/acme # Tell Traefik to save SSL certs here         
+      networks:
+        - backend
 
 networks:
-#  traefik_proxy:
-#    external:
-#        name: traefik_proxy
   backend:
     driver: "bridge"
